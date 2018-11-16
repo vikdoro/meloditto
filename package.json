@@ -1,0 +1,16 @@
+{
+  "name": "pie",
+  "version": "1.0.0",
+  "description": "Readme",
+  "main": "src/pie-app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@polymer/iron-flex-layout": "^3.0.1",
+    "@polymer/polymer": "^3.1.0",
+    "@webcomponents/webcomponentsjs": "^2.1.3"
+  }
+}
