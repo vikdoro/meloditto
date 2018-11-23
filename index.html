@@ -22,16 +22,27 @@
     <pie-app id="app"></pie-app>
 </body>
 <script src="node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+<script src="loadBuffer.js"></script>
 
 <script>
-  var context;
   window.addEventListener('load', init, false);
   function init() {
     try {
       // Fix up for prefixing
       window.AudioContext = window.AudioContext||window.webkitAudioContext;
-      context = new AudioContext();
-      console.log('all good');
+      window.context = new AudioContext();
+      window.bufferLoader = new BufferLoader(
+        window.context,
+        [
+        'assets/sounds/piano-c.m4a',
+        'assets/sounds/piano-d.m4a',
+        'assets/sounds/piano-e.m4a',
+        'assets/sounds/piano-g.m4a',
+        'assets/sounds/piano-a.m4a',
+        ],
+        function () { console.log('sounds loaded') }
+      );
+        window.bufferLoader.load();
     }
     catch(e) {
       alert('Web Audio API is not supported in this browser');
