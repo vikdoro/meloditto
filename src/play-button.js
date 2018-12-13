@@ -8,12 +8,9 @@ class PlayButton extends PolymerElement {
             :host {
                 display: block;
             }
-
             button {
-                width: 150px;
                 box-sizing: border-box;
-                padding: 30px;
-                margin: 0 15px;              
+                padding: 16px;           
                 border: none;
                 outline: none;       
                 fill: rgba(255,255,255,0.9);
@@ -22,12 +19,15 @@ class PlayButton extends PolymerElement {
                 box-shadow: 0 5px 10px rgba(0,0,0,0.25);
                 cursor: pointer;
             }
-
+            svg {
+                height: 40px;
+                width: 40px;
+            }
             [hidden] {
                 display: none !important;
             }
         </style>
-        <button on-click="toggle">
+        <button>
             <svg id="play-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
             <path id="play-icon-path" d="M11,8 L26,16 11,24 11,8">
                 <animate id="play-icon-animate" attributeName="d" fill="freeze" dur="0.1s"
@@ -49,62 +49,69 @@ class PlayButton extends PolymerElement {
                 type: String,
                 value: 'M9, 8 L14, 8 14, 24 9, 24 9, 8 M19, 8 L24, 8 24, 24 19, 24 19,8'
             },
-            animationDuration: {
-                type: Number,
-                value: 100
-            },
             state: {
                 type: Boolean,
                 value: true
             },
             timeout: {
                 type: Number
+            },
+            playback: {
+                type: Boolean,
+                value: false,
+                observer: 'onPlayBackChanged'
             }
         }
-    }
-    static get observers() {
-        return [
-
-
-        ];
     }
     constructor () {
         super();
     }
-    connectedCallback () {
+    connectedCallback() {
         super.connectedCallback();
         this.originalPath = this.$['play-icon-path'].getAttribute('d');
     }
-    toState (state) {
-        if (state == this.state) {
+    onPlayBackChanged(newValue, oldValue) {
+        // On start
+        if (newValue) {
+            this.toState(false);
+        // On stop
+        } else {
+            this.toState(true);
+        }
+    }
+    toState(state) {
+        if (state === this.state) {
             return;
         }
         
+        // Pause animate to play
         if (state) {
             this._setPaths(this.playPath, this.pausePath, this.playPath);
-            this.styleClass ? this.$['play-icon'].classList.add(this.styleClass) : null;
+        // Play animate to pause
         } else {
             this._setPaths(this.pausePath, this.playPath, this.pausePath);
-            this.styleClass ? this.$['play-icon'].classList.remove(this.styleClass) : null;
         }
     
         this.state = state;
-        this.$['play-icon'].beginElement();
+        this.$['play-icon-animate'].beginElement();
     
-        if (this.originalPath && this.animationDuration) {
+        // Set the path after the animation ends
+        if (this.originalPath) {
             this.timeout ? clearTimeout(this.timeout) : null;
-            this.timeout = setTimeout(this._resetOriginal.bind(this), this.animationDuration);
+            this.timeout = setTimeout(this._resetOriginal.bind(this), 100);
         }
     }  
-    toggle () {
+    toggle() {
+        // Signal to start playing
         this.toState(!this.state);
     }
-    _setPaths (d, from, to) {
+    _setPaths(d, from, to) {
         this.$['play-icon-path'].setAttribute('d', d);
-        this.$['play-icon'].setAttribute('from', from);
-        this.$['play-icon'].setAttribute('to', to);
+        this.$['play-icon-animate'].setAttribute('from', from);
+        this.$['play-icon-animate'].setAttribute('to', to);
     }
-    _resetOriginal = function() {
+    _resetOriginal() {
+        // Apply only when reverting back (pause to play)
         if (this.state) {
             this._setPaths(this.originalPath, '', '');
         }
