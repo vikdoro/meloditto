@@ -73,7 +73,7 @@ let PiePlayerMixinInternal = (superClass) => {
                 item.time = item.time + window.context.currentTime;
                 return item;
             });
-            console.log('array', JSON.stringify(this.scheduledNotes));
+            console.log('array', JSON.stringify(this.scheduledNotes.map(item => item.note)));
             this.scheduler();
             this.draw();
         }

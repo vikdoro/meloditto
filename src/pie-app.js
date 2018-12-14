@@ -14,48 +14,68 @@ class PieApp extends PiePlayerMixin(PolymerElement) {
                 max-height: 100vh;
                 background: #fafafa;
                 margin: 0 auto;
+                border: 1px solid #ddd;
                 --cell-size: 70px;
             }
+            #container {
+                height: 100%;
+                box-sizing: border-box;
+            }
             .wrapper {
+                position: relative;
                 opacity: 1;
                 width: calc((var(--cell-size) * 9) + 18px);
-                width: 100%;
-                height: calc((var(--cell-size) * 9) + 18px);
-                height: 110vw;
+                width: 100vw;
+                max-width: 440px;
+                height: 120vw;
+                max-height: 528px;
+                border: 1px solid purple;
                 background: #22272d;
-                padding-top: 64px;
+            }
+            .inner-wrapper {
+                position: absolute;
+                top: 0;
+                bottom: 0;
+                left: 0;
+                right: 0;
             }
             .top-bar {
+                width: 100%;
                 opacity: 1;
                 background: #f5f5f5;
                 padding: 16px 8px;
             }
             .bottom-bar {
-                opacity: 1;
+                width: 100%;
                 height: 16px;
+                opacity: 1;
             }
             .progress-section {
                 background: slategray;
-                margin: 0 2px;
+                margin-left: 2px;
+            }
+            .progress-section:first-child {
+                margin-left: 0;
             }
             play-button {
                 width: 72px;
                 height: 72px;
                 opacity: 1;
-                margin: 0 auto;
             }
             .right {
                 background: green;
             }
             .cell {
-                border: 1px solid #eee;
-                border: 1px solid transparent;
                 flex: 1;
                 height: var(--cell-size);        
                 width: var(--cell-size);
             }           
             .key {
                 background: transparent;
+                opacity: 1;
+            }
+            .correct {
+                background: green;
             }
             .sector:hover {
                 background: #009;
@@ -64,6 +84,9 @@ class PieApp extends PiePlayerMixin(PolymerElement) {
                 width: 64px;
                 height: 64px;
                 background: #7EBDC2;
+            }
+            :host([reset]) .progress-section {
+                background: #c62828;
             }
             #note-2 {
                 width: 0; 
@@ -99,101 +122,107 @@ class PieApp extends PiePlayerMixin(PolymerElement) {
                 display: none !important;
             }
         </style>
-        <div class="top-bar horizontal layout justified">
-            <div id="point-counter">71</div>
-            <div id="quit-game-trigger">
-                <iron-icon icon="pie-icons:close" on-click="quitGame"></iron-icon>
+        <div id="container" class="vertical layout center-center">
+            <div class="top-bar horizontal layout justified">
+                <div id="point-counter">71</div>
+                <div id="quit-game-trigger">
+                    <iron-icon icon="pie-icons:close" on-click="quitGame"></iron-icon>
+                </div>
+            </div>
+            <div class="wrapper">
+                <div class="inner-wrapper vertical layout">
+                    <div class="row horizontal layout">
+                        <div class="cell" on-click="hit"></div>
+                        <div class="cell" on-click="hit"></div>
+                        <div class="cell" on-click="hit"></div>
+                        <div class="cell" on-click="hit"></div>
+                        <div class="cell key layout vertical center-center" data-note="0" on-click="hit">
+                            <div id="note-1"></div>
+                        </div>
+                        <div class="cell" on-click="hit"></div>
+                        <div class="cell" on-click="hit"></div>
+                        <div class="cell" on-click="hit"></div>
+                        <div class="cell" on-click="hit"></div>
+                    </div>
+
+                    <div class="row horizontal layout">
+                        <div class="cell" on-click="hit"></div>
+                        <div class="cell" on-click="hit"></div>
+                        <div class="cell" on-click="hit"></div>
+                        <div class="cell" on-click="hit"></div>        
+                        <div class="cell" on-click="hit"></div>
+                        <div class="cell key layout vertical center-center" data-note="1" on-click="hit">
+                            <div id="note-2"></div>
+                        </div>
+                        <div class="cell" on-click="hit"></div>
+                        <div class="cell" on-click="hit"></div>
+                        <div class="cell" on-click="hit"></div>
+                    </div>
+
+                    <div class="row horizontal layout">
+                        <div class="cell" on-click="hit"></div>
+                        <div class="cell" on-click="hit"></div>
+                        <div class="cell" on-click="hit"></div>
+                        <div class="cell key layout vertical center-center" data-note="3" on-click="hit">
+                            <div id="note-5"></div>
+                        </div>
+                        <div class="cell" on-click="hit"></div>
+                        <div class="cell" on-click="hit"></div>
+                        <div class="cell key layout vertical center-center" data-note="2" on-click="hit">
+                            <div id="note-3"></div>
+                        </div>
+                        <div class="cell" on-click="hit"></div>
+                        <div class="cell" on-click="hit"></div>
+                    </div>
+
+                    <div class="row horizontal layout">
+                        <div class="cell" on-click="hit"></div>
+                        <div class="cell" on-click="hit"></div>
+                        <div class="cell" on-click="hit"></div>
+                        <div class="cell" on-click="hit"></div>   
+                        <div class="cell key layout vertical center-center" data-note="4" on-click="hit">
+                            <div id="note-4"></div>
+                        </div>
+                        <div class="cell" on-click="hit"></div>
+                        <div class="cell" on-click="hit"></div>
+                        <div class="cell" on-click="hit"></div>
+                        <div class="cell" on-click="hit"></div>
+                    </div>
+
+                    <div class="row horizontal layout">
+                        <div class="cell" on-click="hit"></div>
+                        <div class="cell" on-click="hit"></div>
+                        <div class="cell" on-click="hit"></div>
+                        <div class="cell" on-click="hit"></div>
+                        <div class="cell" on-click="hit"></div>
+                        <div class="cell" on-click="hit"></div>
+                        <div class="cell" on-click="hit"></div>
+                        <div class="cell" on-click="hit"></div>
+                        <div class="cell" on-click="hit"></div>
+                    </div>
+
+                    <div class="row horizontal layout">
+                        <div class="cell" on-click="hit"></div>
+                        <div class="cell" on-click="hit"></div>
+                        <div class="cell" on-click="hit"></div>
+                        <div class="cell" on-click="hit"></div>        
+                        <div class="cell" on-click="hit"></div>
+                        <div class="cell" on-click="hit"></div>
+                        <div class="cell" on-click="hit"></div>
+                        <div class="cell" on-click="hit"></div>
+                        <div class="cell" on-click="hit"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="bottom-bar horizontal layout">
+                <template is="dom-repeat" items="[[botSequence]]">
+                    <div class$="[[_computeProgressClass(item, index, progressIndex, playbackIndex)]]"></div>
+                </template>
+            </div>
+            <div class="flex layout vertical center-center">
+                <play-button on-click="togglePlayback" playback="[[playback]]"></play-button>
             </div>
         </div>
-        <div class="wrapper vertical layout">
-            <div class="row horizontal layout">
-                <div class="cell" on-click="hit"></div>
-                <div class="cell" on-click="hit"></div>
-                <div class="cell" on-click="hit"></div>
-                <div class="cell" on-click="hit"></div>
-                <div class="cell key layout vertical center-center" data-note="0" on-click="hit">
-                    <div id="note-1"></div>
-                </div>
-                <div class="cell" on-click="hit"></div>
-                <div class="cell" on-click="hit"></div>
-                <div class="cell" on-click="hit"></div>
-                <div class="cell" on-click="hit"></div>
-            </div>
-
-            <div class="row horizontal layout">
-                <div class="cell" on-click="hit"></div>
-                <div class="cell" on-click="hit"></div>
-                <div class="cell" on-click="hit"></div>
-                <div class="cell" on-click="hit"></div>        
-                <div class="cell" on-click="hit"></div>
-                <div class="cell key layout vertical center-center" data-note="1" on-click="hit">
-                    <div id="note-2"></div>
-                </div>
-                <div class="cell" on-click="hit"></div>
-                <div class="cell" on-click="hit"></div>
-                <div class="cell" on-click="hit"></div>
-            </div>
-
-            <div class="row horizontal layout">
-                <div class="cell" on-click="hit"></div>
-                <div class="cell" on-click="hit"></div>
-                <div class="cell" on-click="hit"></div>
-                <div class="cell key layout vertical center-center" data-note="3" on-click="hit">
-                    <div id="note-5"></div>
-                </div>
-                <div class="cell" on-click="hit"></div>
-                <div class="cell" on-click="hit"></div>
-                <div class="cell key layout vertical center-center" data-note="2" on-click="hit">
-                    <div id="note-3"></div>
-                </div>
-                <div class="cell" on-click="hit"></div>
-                <div class="cell" on-click="hit"></div>
-            </div>
-
-            <div class="row horizontal layout">
-                <div class="cell" on-click="hit"></div>
-                <div class="cell" on-click="hit"></div>
-                <div class="cell" on-click="hit"></div>
-                <div class="cell" on-click="hit"></div>   
-                <div class="cell key layout vertical center-center" data-note="4" on-click="hit">
-                    <div id="note-4"></div>
-                </div>
-                <div class="cell" on-click="hit"></div>
-                <div class="cell" on-click="hit"></div>
-                <div class="cell" on-click="hit"></div>
-                <div class="cell" on-click="hit"></div>
-            </div>
-
-            <div class="row horizontal layout">
-                <div class="cell" on-click="hit"></div>
-                <div class="cell" on-click="hit"></div>
-                <div class="cell" on-click="hit"></div>
-                <div class="cell" on-click="hit"></div>
-                <div class="cell" on-click="hit"></div>
-                <div class="cell" on-click="hit"></div>
-                <div class="cell" on-click="hit"></div>
-                <div class="cell" on-click="hit"></div>
-                <div class="cell" on-click="hit"></div>
-            </div>
-
-            <div class="row horizontal layout">
-                <div class="cell" on-click="hit"></div>
-                <div class="cell" on-click="hit"></div>
-                <div class="cell" on-click="hit"></div>
-                <div class="cell" on-click="hit"></div>        
-                <div class="cell" on-click="hit"></div>
-                <div class="cell" on-click="hit"></div>
-                <div class="cell" on-click="hit"></div>
-                <div class="cell" on-click="hit"></div>
-                <div class="cell" on-click="hit"></div>
-            </div>
-        </div>
-        <div class="bottom-bar horizontal layout">
-            <template is="dom-repeat" items="[[botSequence]]">
-                <div class$="[[_computeProgressClass(item, index, progressIndex, playbackIndex)]]"></div>
-            </template>
-        </div>
-        <play-button on-click="togglePlayback" playback="[[playback]]"></play-button>
         `;
     }
 
@@ -215,6 +244,11 @@ class PieApp extends PiePlayerMixin(PolymerElement) {
             playbackIndex: {
                 type: Number,
                 value: -1
+            },
+            reset: {
+                type: Boolean,
+                value: false,
+                reflectToAttribute: true
             }
         }
     }
@@ -248,6 +282,8 @@ class PieApp extends PiePlayerMixin(PolymerElement) {
             this.checkGame();
         } else {
             console.log('wrong');
+            this.reset = true;
+            setTimeout(() => this.reset = false, 1200);
             e.currentTarget.style.borderColor = 'red';
             setTimeout(() => element.style.borderColor = '#eee', 500);
             this.set('userSequence', []);
@@ -278,6 +314,7 @@ class PieApp extends PiePlayerMixin(PolymerElement) {
         this.set('userSequence', []);
         // Number of notes [2..4]
         let numberOfNotes = Math.floor(Math.random() * 3) + 2;
+        console.log('number of notes', numberOfNotes);
         // dev
         // numberOfNotes = 2;
         const timings = [];
@@ -290,15 +327,14 @@ class PieApp extends PiePlayerMixin(PolymerElement) {
         }
         // Going through the crotchet values and replace some with quavers
         this.indexesToTransform = this.indexesToTransform || [];
-
-        // ForEach while adding new items to the array
         sequence.forEach((item, index) => {
             // 65% times don't transform to quavers 
             if (Math.random() <= 0.65) {
                 return;
             }
-            this.push('indexesToTransform', index);
+            this.push('indexesToTransform', this.indexesToTransform);
         });
+        console.log('indexes to transform', numberOfNotes);
         for (let j = 0; j < this.indexesToTransform.length; j++) {
             let indexToTransform = this.indexesToTransform[j];
             sequence[indexToTransform].length = 2;
@@ -343,6 +379,9 @@ class PieApp extends PiePlayerMixin(PolymerElement) {
         }
         if (itemIndex > playbackIndex) {
             classString += ' concealed';
+        }
+        if (itemIndex <= progressIndex) {
+            classString += ' correct';
         }
         return classString;
     }
