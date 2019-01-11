@@ -23,13 +23,12 @@ class PieApp extends PiePlayerMixin(PolymerElement) {
             }
             .wrapper {
                 position: relative;
-                opacity: 1;
+                opacity: 0.05;
                 width: calc((var(--cell-size) * 9) + 18px);
                 width: 100vw;
                 max-width: 440px;
                 height: 120vw;
                 max-height: 528px;
-                border: 1px solid purple;
                 background: #22272d;
             }
             .inner-wrapper {
@@ -43,15 +42,18 @@ class PieApp extends PiePlayerMixin(PolymerElement) {
                 width: 100%;
                 opacity: 1;
                 background: #f5f5f5;
+                box-sizing: border-box;
                 padding: 16px 8px;
             }
             .bottom-bar {
                 width: 100%;
                 height: 16px;
                 opacity: 1;
+                margin: 4px 0;
             }
             .progress-section {
                 background: slategray;
+                border-radius: 24px;
                 margin-left: 2px;
             }
             .progress-section:first-child {
@@ -60,7 +62,11 @@ class PieApp extends PiePlayerMixin(PolymerElement) {
             play-button {
                 width: 72px;
                 height: 72px;
-                opacity: 1;
+                opacity: 0.2;
+                position: absolute;
+                top: 6px;
+                left: 6px;
+                transform: translateZ(0);
             }
             .right {
                 background: green;
@@ -69,10 +75,15 @@ class PieApp extends PiePlayerMixin(PolymerElement) {
                 flex: 1;
                 height: var(--cell-size);        
                 width: var(--cell-size);
+                transform: scale(0.9);
             }           
             .key {
                 background: transparent;
                 opacity: 1;
+                transition: 50ms transform;
+            }
+            .key.hit {
+                transform: scale(1);
             }
             .correct {
                 background: green;
@@ -118,99 +129,124 @@ class PieApp extends PiePlayerMixin(PolymerElement) {
             .concealed {
                 background: transparent;
             }
+            .invisible {
+                opacity: 0;
+                visibility: hidden;
+            }
+            #play-button-container {
+                position: relative;
+                width: 84px;
+                height: 84px;
+            }
+            #play-button-container svg {
+                position: absolute;
+                top: 0px;
+                left: 0px;
+            }
+            #play-button-container svg {
+                width: 84px;
+                height: 84px;
+            }
+            #play-button-container svg circle {
+                fill: none;
+                stroke: red;
+                stroke-width: 4;
+                transform: translateZ(0);
+            }
             [hidden] {
                 display: none !important;
             }
         </style>
-        <div id="container" class="vertical layout center-center">
+        <div id="container" class="vertical layout center">
             <div class="top-bar horizontal layout justified">
-                <div id="point-counter">71</div>
-                <div id="quit-game-trigger">
+                <div id="point-counter">[[score]]</div>
+                <!--<div id="quit-game-trigger">
                     <iron-icon icon="pie-icons:close" on-click="quitGame"></iron-icon>
                 </div>
+                -->
             </div>
             <div class="wrapper">
                 <div class="inner-wrapper vertical layout">
                     <div class="row horizontal layout">
-                        <div class="cell" on-click="hit"></div>
-                        <div class="cell" on-click="hit"></div>
-                        <div class="cell" on-click="hit"></div>
-                        <div class="cell" on-click="hit"></div>
+                        <div class="cell"></div>
+                        <div class="cell"></div>
+                        <div class="cell"></div>
+                        <div class="cell"></div>
                         <div class="cell key layout vertical center-center" data-note="0" on-click="hit">
                             <div id="note-1"></div>
                         </div>
-                        <div class="cell" on-click="hit"></div>
-                        <div class="cell" on-click="hit"></div>
-                        <div class="cell" on-click="hit"></div>
-                        <div class="cell" on-click="hit"></div>
+                        <div class="cell"></div>
+                        <div class="cell"></div>
+                        <div class="cell"></div>
+                        <div class="cell"></div>
                     </div>
 
                     <div class="row horizontal layout">
-                        <div class="cell" on-click="hit"></div>
-                        <div class="cell" on-click="hit"></div>
-                        <div class="cell" on-click="hit"></div>
-                        <div class="cell" on-click="hit"></div>        
-                        <div class="cell" on-click="hit"></div>
+                        <div class="cell"></div>
+                        <div class="cell"></div>
+                        <div class="cell"></div>
+                        <div class="cell"></div>        
+                        <div class="cell"></div>
                         <div class="cell key layout vertical center-center" data-note="1" on-click="hit">
                             <div id="note-2"></div>
                         </div>
-                        <div class="cell" on-click="hit"></div>
-                        <div class="cell" on-click="hit"></div>
-                        <div class="cell" on-click="hit"></div>
+                        <div class="cell"></div>
+                        <div class="cell"></div>
+                        <div class="cell"></div>
                     </div>
 
                     <div class="row horizontal layout">
-                        <div class="cell" on-click="hit"></div>
-                        <div class="cell" on-click="hit"></div>
-                        <div class="cell" on-click="hit"></div>
-                        <div class="cell key layout vertical center-center" data-note="3" on-click="hit">
+                        <div class="cell"></div>
+                        <div class="cell"></div>
+                        <div class="cell"></div>
+                        <div class="cell key layout vertical center-center" data-note="4" on-click="hit">
                             <div id="note-5"></div>
                         </div>
-                        <div class="cell" on-click="hit"></div>
-                        <div class="cell" on-click="hit"></div>
+                        <div class="cell"></div>
+                        <div class="cell"></div>
                         <div class="cell key layout vertical center-center" data-note="2" on-click="hit">
                             <div id="note-3"></div>
                         </div>
-                        <div class="cell" on-click="hit"></div>
-                        <div class="cell" on-click="hit"></div>
+                        <div class="cell"></div>
+                        <div class="cell"></div>
                     </div>
 
                     <div class="row horizontal layout">
-                        <div class="cell" on-click="hit"></div>
-                        <div class="cell" on-click="hit"></div>
-                        <div class="cell" on-click="hit"></div>
-                        <div class="cell" on-click="hit"></div>   
-                        <div class="cell key layout vertical center-center" data-note="4" on-click="hit">
+                        <div class="cell"></div>
+                        <div class="cell"></div>
+                        <div class="cell"></div>
+                        <div class="cell"></div>   
+                        <div class="cell key layout vertical center-center" data-note="3" on-click="hit">
                             <div id="note-4"></div>
                         </div>
-                        <div class="cell" on-click="hit"></div>
-                        <div class="cell" on-click="hit"></div>
-                        <div class="cell" on-click="hit"></div>
-                        <div class="cell" on-click="hit"></div>
+                        <div class="cell"></div>
+                        <div class="cell"></div>
+                        <div class="cell"></div>
+                        <div class="cell"></div>
                     </div>
 
                     <div class="row horizontal layout">
-                        <div class="cell" on-click="hit"></div>
-                        <div class="cell" on-click="hit"></div>
-                        <div class="cell" on-click="hit"></div>
-                        <div class="cell" on-click="hit"></div>
-                        <div class="cell" on-click="hit"></div>
-                        <div class="cell" on-click="hit"></div>
-                        <div class="cell" on-click="hit"></div>
-                        <div class="cell" on-click="hit"></div>
-                        <div class="cell" on-click="hit"></div>
+                        <div class="cell"></div>
+                        <div class="cell"></div>
+                        <div class="cell"></div>
+                        <div class="cell"></div>
+                        <div class="cell"></div>
+                        <div class="cell"></div>
+                        <div class="cell"></div>
+                        <div class="cell"></div>
+                        <div class="cell"></div>
                     </div>
 
                     <div class="row horizontal layout">
-                        <div class="cell" on-click="hit"></div>
-                        <div class="cell" on-click="hit"></div>
-                        <div class="cell" on-click="hit"></div>
-                        <div class="cell" on-click="hit"></div>        
-                        <div class="cell" on-click="hit"></div>
-                        <div class="cell" on-click="hit"></div>
-                        <div class="cell" on-click="hit"></div>
-                        <div class="cell" on-click="hit"></div>
-                        <div class="cell" on-click="hit"></div>
+                        <div class="cell"></div>
+                        <div class="cell"></div>
+                        <div class="cell"></div>
+                        <div class="cell"></div>        
+                        <div class="cell"></div>
+                        <div class="cell"></div>
+                        <div class="cell"></div>
+                        <div class="cell"></div>
+                        <div class="cell"></div>
                     </div>
                 </div>
             </div>
@@ -219,7 +255,16 @@ class PieApp extends PiePlayerMixin(PolymerElement) {
                     <div class$="[[_computeProgressClass(item, index, progressIndex, playbackIndex)]]"></div>
                 </template>
             </div>
-            <div class="flex layout vertical center-center">
+            <div id="play-button-container" class="l-relative layout vertical center-center">
+                <svg>
+                    <circle id="shape"
+                            cx="42"
+                            cy="42"
+                            r="40"
+                            stroke-dasharray="252"
+                            stroke-dashoffset="252"
+                            on-transitionend="onPlayButtonAnimationEnd"/>
+                </svg>
                 <play-button on-click="togglePlayback" playback="[[playback]]"></play-button>
             </div>
         </div>
@@ -249,7 +294,12 @@ class PieApp extends PiePlayerMixin(PolymerElement) {
                 type: Boolean,
                 value: false,
                 reflectToAttribute: true
-            }
+            },
+            score: {
+                type: Number,
+                value: 0
+            },
+            hasWon: Boolean
         }
     }
     static get observers() {
@@ -262,45 +312,80 @@ class PieApp extends PiePlayerMixin(PolymerElement) {
     }
     connectedCallback() {
         super.connectedCallback();
+        setTimeout(() => {
+            this.startPlaybackWithDelay();
+        }, 100);
     }
     hit(e) {
         e.stopPropagation();
-        let note = e.currentTarget.getAttribute('data-note');
+        if (this.playback) {
+            return;
+        }
+        const element = e.currentTarget;
+        let note = element.getAttribute('data-note');
         if (!note) {
             return;
         }
         note = parseInt(note);
-        const element = e.currentTarget;
         this.playSound(note);
+        element.classList.add('hit');
+        setTimeout(() => {
+            element.classList.remove('hit');
+        }, 250);
+        if (!this.botSequence || this.botSequence.length === 0) {
+            return;
+        }
         const currentNoteIndex = this.userSequence.length;
         if (this.botSequence[currentNoteIndex].noteIndex === note) {
-            console.log('right');
-            e.currentTarget.style.borderColor = 'green';
-            setTimeout(() => element.style.borderColor = '#eee', 500);
             this.push('userSequence', note);
             this.progressIndex = this.progressIndex + 1;
             this.checkGame();
+            this.score = this.score + 10;
         } else {
-            console.log('wrong');
             this.reset = true;
             setTimeout(() => this.reset = false, 1200);
-            e.currentTarget.style.borderColor = 'red';
-            setTimeout(() => element.style.borderColor = '#eee', 500);
             this.set('userSequence', []);
             this.progressIndex = -1;
+            this.score = this.score - 10;
         }
     }
     checkGame() {
         if (this.userSequence.length === this.botSequence.length) {
-            console.log('win');
+            this.hasWon = true;
+            this.score = this.score + 20;
+            setTimeout(() => {
+                // Only if hasWon is still true, i.e. playback was not triggered manually
+                if (this.hasWon) {
+                    this.set('botSequence', []);
+                    this.progressIndex = -1;
+                }
+            }, 1000);
+            setTimeout(() => {
+                // Only if hasWon is still true, i.e. playback was not triggered manually
+                if (this.hasWon) {
+                    this.startPlaybackWithDelay();
+                }
+            }, 1000);
         }
+    }
+    startPlaybackWithDelay() {
+        this.shadowRoot.querySelector('#play-button-container svg circle').style.transition = 'stroke-dashoffset 1500ms cubic-bezier(0.2, 0.2, 0.7, 0.8)';
+        this.shadowRoot.querySelector('#play-button-container svg circle').setAttribute('stroke-dashoffset', 0);
     }
     togglePlayback() {
         this.playback = !this.playback;
-        if (this.playback) {
-            this.playbackIndex = -1;
-            this.playBotSequence();
+        // Playback button hit straight after winning
+        this.resetPlaybackButtonStrokeOffset();
+        if (!this.playback) {
+            return;
         }
+        if (this.botSequence.length === 0 || this.hasWon) {
+            this.progressIndex = -1;
+            this.playbackIndex = -1;
+            this.generateSequence();
+            this.hasWon = false;
+        }
+        this.playBotSequence();
     }
     generateSequence() {
         let botSequenceCandidate;
@@ -314,47 +399,37 @@ class PieApp extends PiePlayerMixin(PolymerElement) {
         this.set('userSequence', []);
         // Number of notes [2..4]
         let numberOfNotes = Math.floor(Math.random() * 3) + 2;
-        console.log('number of notes', numberOfNotes);
         // dev
         // numberOfNotes = 2;
         const timings = [];
         for (let i = 0; i < numberOfNotes; i++) {
             do {
                 // Randomly choose note index [0..4] and set length to normal crotchet
-                sequence[i] = { noteIndex: Math.floor(Math.random() * 4 + 1), length: 4 };
+                sequence[i] = { noteIndex: Math.floor(Math.random() * 5), length: 4 };
             // Repeat until no consecutive notes are the same
             } while (sequence[i].noteIndex === sequence[i - 1] &&sequence[i - 1].noteIndex);
         }
         // Going through the crotchet values and replace some with quavers
-        this.indexesToTransform = this.indexesToTransform || [];
+        let indexesToTransform = [];
         sequence.forEach((item, index) => {
             // 65% times don't transform to quavers 
             if (Math.random() <= 0.65) {
                 return;
             }
-            this.push('indexesToTransform', this.indexesToTransform);
+            indexesToTransform.push(index);
         });
-        console.log('indexes to transform', numberOfNotes);
-        for (let j = 0; j < this.indexesToTransform.length; j++) {
-            let indexToTransform = this.indexesToTransform[j];
+        for (let j = 0; j < indexesToTransform.length; j++) {
+            let indexToTransform = indexesToTransform[j];
             sequence[indexToTransform].length = 2;
             //adding quaver
-            sequence.splice(indexToTransform, 0, { noteIndex: Math.floor(Math.random() * 4 + 1), length: 2 });
+            sequence.splice(indexToTransform + 1, 0, { noteIndex: Math.floor(Math.random() * 5), length: 2 });
         }
-        console.log('botSequence', JSON.stringify(sequence));
         return sequence;
     }
     arraysDiffer(arr1, arr2) {
         return arr1.length !== arr2.length || arr1.filter((item, index) => item !== arr2[index]).length > 0;
     }
     playBotSequence() {
-        // DEMO START
-        this.set('botSequence', []);
-        // DEMO END
-        if (this.botSequence.length === 0) {
-            this.generateSequence();
-        }
-        this.playback = true;
         let currentTime = 0;
         let tempArray = [];
         for (let k = 0; k < this.botSequence.length; k++) {
@@ -367,8 +442,7 @@ class PieApp extends PiePlayerMixin(PolymerElement) {
             currentTime += currentNote.length * 0.25;
         }
         this.set('scheduledNotes', tempArray);
-        console.log('this is scheduled notes', this.scheduledNotes);
-        setTimeout(this.startPlayback.bind(this), 320);
+        setTimeout(this.startPlayback.bind(this), 0);
     }
     _computeProgressClass(item, itemIndex, progressIndex, playbackIndex) {
         let classString = 'progress-section';
@@ -384,6 +458,14 @@ class PieApp extends PiePlayerMixin(PolymerElement) {
             classString += ' correct';
         }
         return classString;
+    }
+    resetPlaybackButtonStrokeOffset() {
+        this.shadowRoot.querySelector('#play-button-container svg circle').style.transition = 'none';
+        this.shadowRoot.querySelector('#play-button-container svg circle').setAttribute('stroke-dashoffset', 252);
+    }
+    onPlayButtonAnimationEnd() {
+        this.hasWon = false;
+        this.togglePlayback();
     }
 }
 customElements.define(PieApp.is, PieApp);

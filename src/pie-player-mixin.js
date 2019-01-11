@@ -51,17 +51,15 @@ let PiePlayerMixinInternal = (superClass) => {
                 },
                 scheduledNotes: {
                     type: Array,
-                    value: () => [
-                        {note: 1, time: 0},
-                        {note: 2, time: 1},
-                        {note: 2, time: 2},
-                        {note: 4, time: 3},
-                        {note: 2, time: 4}
-                    ]
+                    value: () => []
                 },
                 scheduledNotesForDrawing: {
                     type: Array,
                     value: () => []
+                },
+                playbackReadyToStart: {
+                    type: Boolean,
+                    value: true
                 }
             }
         }
@@ -69,21 +67,28 @@ let PiePlayerMixinInternal = (superClass) => {
             super.connectedCallback();
         }
         startPlayback() {
+            console.log('Start');
+            clearTimeout(this.timerID);
+            this.readyToStart = true;
             this.scheduledNotes = this.scheduledNotes.map(item => {
                 item.time = item.time + window.context.currentTime;
                 return item;
             });
-            console.log('array', JSON.stringify(this.scheduledNotes.map(item => item.note)));
             this.scheduler();
             this.draw();
         }
         playSound(note, time=0) {
-            console.log('playing sound', note, time)
+            console.log(note)
             return new Promise((resolve, reject) => {
                 this.source = window.context.createBufferSource();
                 this.source.buffer = window.bufferLoader.bufferList[note];
                 this.source.connect(window.context.destination);
-                this.source.onended = resolve;
+                // manually adding a non-existong property to determine if it needs to be disconnected
+                this.source.connected = true;
+                this.source.onended = () => {
+                    this.source.connected = false;
+                    resolve();
+                };
                 this.source.start(time);
                 this.push('sources', this.source);
             });
@@ -91,38 +96,42 @@ let PiePlayerMixinInternal = (superClass) => {
         onPlaybackChanged(newValue, oldValue) {
             // Stop audio
             if (oldValue && !newValue) {
-                this.source.disconnect(window.context.destination);
+                this.readyToStart = false;
                 for (var i = 0; i < this.sources.length; i++) {
+                    if (this.sources[i].connected) {
+                        this.sources[i].disconnect(window.context.destination);
+                        this.sources[i].connected = false;
+                    }
                     this.sources[i].stop();
-                    this.splice('sources', i);
+                    // this.splice('sources', i);
                 }
+                clearTimeout(this.timerID);
+                this.set('sources', []);
                 this.nextIndex = 0;
+                // If playback hasn't completed at least once, reset the playbackIndex
+                if (this.playbackIndex < this.scheduledNotes.length - 1) {
+                    this.playbackIndex = -1;
+                }
             }
         }
         nextNote() {
             this.nextIndex++;
-            // Past the last valid index, cancel scheduler
         }
         scheduler() {
-            let currentNote;
-            do {
-                let currentNote = this.scheduledNotes[this.nextIndex];
+            let currentNote = this.scheduledNotes[this.nextIndex];
+            while (this.playback && currentNote && currentNote.time < window.context.currentTime + this.scheduleAheadTime) {
                 let isLastnote = this.nextIndex === this.scheduledNotes.length - 1;
                 this.playSound(currentNote.note, currentNote.time).then(() => {
-                    console.log('audio end', isLastnote)
                     if (isLastnote) {
-                        console.log('Playback stopped', this.timerID);
                         this.playback = false;
                     };
                 });
                 this.push('scheduledNotesForDrawing', { time: currentNote.time } );
                 // console.log('while')
-                this.nextNote();
-            } while (currentNote && currentNote.time < window.context.currentTime + this.scheduleAheadTime ) {
+                this.nextIndex++;
                 currentNote = this.scheduledNotes[this.nextIndex];
             }
             if (!currentNote) {
-                console.log('Scheduler stopped');
                 return;
             };
             this.timerID = window.setTimeout( this.scheduler.bind(this), this.lookahead );
@@ -131,11 +140,9 @@ let PiePlayerMixinInternal = (superClass) => {
             while (this.scheduledNotesForDrawing.length && this.scheduledNotesForDrawing[0].time < window.context.currentTime) {
                 // currentNote = this.scheduledNotesForDrawing[0].note;
                 this.splice('scheduledNotesForDrawing', 0, 1);
-                console.log('ATTACK');
                 this.playbackIndex = this.playbackIndex + 1;
             }
             if (!this.playback) {
-                console.log('Drawing stopped', this.scheduledNotesForDrawing);
                 // window.cancelAnimationFrame(this.drawID);
                 return;
             }

@@ -16,12 +16,13 @@ class PlayButton extends PolymerElement {
                 fill: rgba(255,255,255,0.9);
                 background-color: slategray;         
                 border-radius: 50%;
-                box-shadow: 0 5px 10px rgba(0,0,0,0.25);
                 cursor: pointer;
+                -webkit-tap-highlight-color: transparent;
             }
             svg {
                 height: 40px;
                 width: 40px;
+                display: block;
             }
             [hidden] {
                 display: none !important;
