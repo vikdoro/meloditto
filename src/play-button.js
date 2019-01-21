@@ -17,7 +17,8 @@ class PlayButton extends PolymerElement {
                 background-color: slategray;         
                 border-radius: 50%;
                 cursor: pointer;
-                -webkit-tap-highlight-color: transparent;
+                margin: 0; /* Safari */
+                -webkit-tap-highlight-color: transparent; /* Android */
             }
             svg {
                 height: 40px;

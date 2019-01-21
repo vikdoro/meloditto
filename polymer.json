@@ -1,0 +1,19 @@
+{
+    "entrypoint": "index.html",
+    "shell": "src/pie-app.js",
+    "sources": [
+        "src/pie-app.js",
+        "assets/**/*"
+    ],
+    "extraDependencies": [
+        "node_modules/@webcomponents/webcomponentsjs/**",
+        "loadBuffer.js"
+    ],
+    "moduleResolution": "node",
+    "npm": true,
+    "builds": [
+        {
+            "preset": "es6-bundled"
+        }
+    ]
+}

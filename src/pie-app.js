@@ -3,8 +3,9 @@ import '@polymer/iron-flex-layout/iron-flex-layout-classes.js';
 import './pie-icons.js';
 import './play-button.js';
 import { PiePlayerMixin } from './pie-player-mixin.js';
+import { GestureEventListeners } from '@polymer/polymer/lib/mixins/gesture-event-listeners.js';
 
-class PieApp extends PiePlayerMixin(PolymerElement) {
+class PieApp extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
     static get template() {
         return html`
         <style is="custom-style" include="iron-flex iron-flex-alignment iron-flex-factors">
@@ -12,9 +13,8 @@ class PieApp extends PiePlayerMixin(PolymerElement) {
                 display: block;
                 max-width: 648px;
                 max-height: 100vh;
-                background: #fafafa;
+                background: #202124;
                 margin: 0 auto;
-                border: 1px solid #ddd;
                 --cell-size: 70px;
             }
             #container {
@@ -23,7 +23,7 @@ class PieApp extends PiePlayerMixin(PolymerElement) {
             }
             .wrapper {
                 position: relative;
-                opacity: 0.05;
+                opacity: 1;
                 width: calc((var(--cell-size) * 9) + 18px);
                 width: 100vw;
                 max-width: 440px;
@@ -38,18 +38,28 @@ class PieApp extends PiePlayerMixin(PolymerElement) {
                 left: 0;
                 right: 0;
             }
-            .top-bar {
+            .top-section {
                 width: 100%;
                 opacity: 1;
-                background: #f5f5f5;
+                color: white;
                 box-sizing: border-box;
                 padding: 16px 8px;
             }
-            .bottom-bar {
+            iron-icon {
+                --iron-icon-width: 21px;
+                --iron-icon-height: 21px;
+            }
+            #point-counter {
+                font-size: 18px;
+            }
+            #note-bars {
                 width: 100%;
                 height: 16px;
                 opacity: 1;
-                margin: 4px 0;
+                background: #22272d;
+                box-sizing: border-box;
+                padding: 0 1px;
+                margin: 6px 0;
             }
             .progress-section {
                 background: slategray;
@@ -62,7 +72,7 @@ class PieApp extends PiePlayerMixin(PolymerElement) {
             play-button {
                 width: 72px;
                 height: 72px;
-                opacity: 0.2;
+                opacity: 1;
                 position: absolute;
                 top: 6px;
                 left: 6px;
@@ -76,11 +86,11 @@ class PieApp extends PiePlayerMixin(PolymerElement) {
                 height: var(--cell-size);        
                 width: var(--cell-size);
                 transform: scale(0.9);
+                /*border: 1px solid white; -->*/
             }           
             .key {
                 background: transparent;
                 opacity: 1;
-                transition: 50ms transform;
             }
             .key.hit {
                 transform: scale(1);
@@ -149,21 +159,23 @@ class PieApp extends PiePlayerMixin(PolymerElement) {
             }
             #play-button-container svg circle {
                 fill: none;
-                stroke: red;
+                stroke: #efe6dd;
                 stroke-width: 4;
                 transform: translateZ(0);
+            }
+            #bottom-section {
+                padding-bottom: 8px;
             }
             [hidden] {
                 display: none !important;
             }
         </style>
         <div id="container" class="vertical layout center">
-            <div class="top-bar horizontal layout justified">
+            <div class="top-section horizontal layout justified">
                 <div id="point-counter">[[score]]</div>
-                <!--<div id="quit-game-trigger">
-                    <iron-icon icon="pie-icons:close" on-click="quitGame"></iron-icon>
+                <div id="quit-game-trigger" hidden$="[[!score]]" on-down="resetGame">
+                    <iron-icon icon="pie-icons:close"></iron-icon>
                 </div>
-                -->
             </div>
             <div class="wrapper">
                 <div class="inner-wrapper vertical layout">
@@ -171,8 +183,20 @@ class PieApp extends PiePlayerMixin(PolymerElement) {
                         <div class="cell"></div>
                         <div class="cell"></div>
                         <div class="cell"></div>
+                        <div class="cell"></div>        
                         <div class="cell"></div>
-                        <div class="cell key layout vertical center-center" data-note="0" on-click="hit">
+                        <div class="cell"></div>
+                        <div class="cell"></div>
+                        <div class="cell"></div>
+                        <div class="cell"></div>
+                    </div>
+
+                    <div class="row horizontal layout">
+                        <div class="cell"></div>
+                        <div class="cell"></div>
+                        <div class="cell"></div>
+                        <div class="cell"></div>
+                        <div class="cell key layout vertical center-center" data-note="0" on-down="hit">
                             <div id="note-1"></div>
                         </div>
                         <div class="cell"></div>
@@ -187,10 +211,10 @@ class PieApp extends PiePlayerMixin(PolymerElement) {
                         <div class="cell"></div>
                         <div class="cell"></div>        
                         <div class="cell"></div>
-                        <div class="cell key layout vertical center-center" data-note="1" on-click="hit">
+                        <div class="cell"></div>
+                        <div class="cell key layout vertical center-center" data-note="1" on-down="hit">
                             <div id="note-2"></div>
                         </div>
-                        <div class="cell"></div>
                         <div class="cell"></div>
                         <div class="cell"></div>
                     </div>
@@ -198,16 +222,16 @@ class PieApp extends PiePlayerMixin(PolymerElement) {
                     <div class="row horizontal layout">
                         <div class="cell"></div>
                         <div class="cell"></div>
-                        <div class="cell"></div>
-                        <div class="cell key layout vertical center-center" data-note="4" on-click="hit">
+                        <div class="cell key layout vertical center-center" data-note="4" on-down="hit">
                             <div id="note-5"></div>
                         </div>
                         <div class="cell"></div>
                         <div class="cell"></div>
-                        <div class="cell key layout vertical center-center" data-note="2" on-click="hit">
+                        <div class="cell"></div>
+                        <div class="cell"></div>
+                        <div class="cell key layout vertical center-center" data-note="2" on-down="hit">
                             <div id="note-3"></div>
                         </div>
-                        <div class="cell"></div>
                         <div class="cell"></div>
                     </div>
 
@@ -216,7 +240,7 @@ class PieApp extends PiePlayerMixin(PolymerElement) {
                         <div class="cell"></div>
                         <div class="cell"></div>
                         <div class="cell"></div>   
-                        <div class="cell key layout vertical center-center" data-note="3" on-click="hit">
+                        <div class="cell key layout vertical center-center" data-note="3" on-down="hit">
                             <div id="note-4"></div>
                         </div>
                         <div class="cell"></div>
@@ -236,36 +260,27 @@ class PieApp extends PiePlayerMixin(PolymerElement) {
                         <div class="cell"></div>
                         <div class="cell"></div>
                     </div>
-
-                    <div class="row horizontal layout">
-                        <div class="cell"></div>
-                        <div class="cell"></div>
-                        <div class="cell"></div>
-                        <div class="cell"></div>        
-                        <div class="cell"></div>
-                        <div class="cell"></div>
-                        <div class="cell"></div>
-                        <div class="cell"></div>
-                        <div class="cell"></div>
+                    <div id="note-bars" class="horizontal layout">
+                        <template is="dom-repeat" items="[[botSequence]]">
+                            <div class$="[[_computeProgressClass(item, index, progressIndex, playbackIndex)]]"></div>
+                        </template>
                     </div>
+
                 </div>
             </div>
-            <div class="bottom-bar horizontal layout">
-                <template is="dom-repeat" items="[[botSequence]]">
-                    <div class$="[[_computeProgressClass(item, index, progressIndex, playbackIndex)]]"></div>
-                </template>
-            </div>
-            <div id="play-button-container" class="l-relative layout vertical center-center">
-                <svg>
-                    <circle id="shape"
-                            cx="42"
-                            cy="42"
-                            r="40"
-                            stroke-dasharray="252"
-                            stroke-dashoffset="252"
-                            on-transitionend="onPlayButtonAnimationEnd"/>
-                </svg>
-                <play-button on-click="togglePlayback" playback="[[playback]]"></play-button>
+            <div id="bottom-section" class="flex vertical layout center-center">
+                <div id="play-button-container" class="l-relative layout vertical center-center">
+                    <svg>
+                        <circle id="shape"
+                                cx="42"
+                                cy="42"
+                                r="40"
+                                stroke-dasharray="252"
+                                stroke-dashoffset="252"
+                                on-transitionend="onPlayButtonAnimationEnd"/>
+                    </svg>
+                    <play-button on-down="togglePlayback" playback="[[playback]]"></play-button>
+                </div>
             </div>
         </div>
         `;
@@ -302,19 +317,9 @@ class PieApp extends PiePlayerMixin(PolymerElement) {
             hasWon: Boolean
         }
     }
-    static get observers() {
-        return [
-        ];
-    }
     constructor() {
         super();
         this.generateSequence = this.generateSequence.bind(this);
-    }
-    connectedCallback() {
-        super.connectedCallback();
-        setTimeout(() => {
-            this.startPlaybackWithDelay();
-        }, 100);
     }
     hit(e) {
         e.stopPropagation();
@@ -379,13 +384,49 @@ class PieApp extends PiePlayerMixin(PolymerElement) {
         if (!this.playback) {
             return;
         }
+        this.set('userSequence', []);
+        this.progressIndex = -1;
         if (this.botSequence.length === 0 || this.hasWon) {
-            this.progressIndex = -1;
             this.playbackIndex = -1;
             this.generateSequence();
             this.hasWon = false;
         }
+        if (!window.context) {
+            this.init();
+            return;
+        }
         this.playBotSequence();
+    }
+    init() {
+        try {
+            window.AudioContext = window.AudioContext || window.webkitAudioContext;
+            window.context = new AudioContext();
+            window.bufferLoader = new BufferLoader(
+                window.context,
+                [
+                    'assets/sounds/piano-c.m4a',
+                    'assets/sounds/piano-d.m4a',
+                    'assets/sounds/piano-e.m4a',
+                    'assets/sounds/piano-g.m4a',
+                    'assets/sounds/piano-a.m4a',
+                ],
+                () => {
+                    this.playBotSequence();
+                }
+            );
+            window.bufferLoader.load();
+        }
+        catch (e) {
+            alert('Web Audio API is not supported in this browser');
+        }
+    }
+    resetGame() {
+        this.set('userSequence', []);
+        this.progressIndex = -1;
+        this.playbackIndex = -1;
+        this.hasWon = false;
+        this.score = 0;
+        this.generateSequence();
     }
     generateSequence() {
         let botSequenceCandidate;

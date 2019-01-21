@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
 <head>
-    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
     <style>
         * {
             box-sizing: border-box;
@@ -12,6 +12,9 @@
             height: 100%;
             margin: 0;
             overflow: hidden;
+            background: #202124;
+            -ms-touch-action: manipulation;
+            touch-action: manipulation;
         }
 
         pie-app {
@@ -21,49 +24,29 @@
 </head>
 <body>
     <pie-app id="app"></pie-app>
+    <script src="cordova.js"></script>
+    <script src="cordova_plugins.js"></script>
+    <script src="node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+    <script src="loadBuffer.js"></script>
+    <script>
+        document.addEventListener('deviceready', () => {
+            cordova.plugins.backgroundMode.enable();
+        }, false);
+    </script>
+    <!-- Load a custom element definitions in `waitFor` and return a promise -->
+    <script type="module">
+        WebComponents.waitFor(() => {
+            // At this point we are guaranteed that all required polyfills have
+            // loaded, and can use web components API's.
+            // The standard pattern is to load element definitions that call
+            // `customElements.define` here.
+            // Note: returning the import's promise causes the custom elements
+            // polyfill to wait until all definitions are loaded and then upgrade
+            // the document in one batch, for better performance.
+            // appReady = true;
+        
+            return import('./src/pie-app.js');
+        });
+    </script>
 </body>
-<script src="node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
-<script src="loadBuffer.js"></script>
-
-<script>
-  window.addEventListener('load', init, false);
-  function init() {
-    try {
-      // Fix up for prefixing
-      window.AudioContext = window.AudioContext||window.webkitAudioContext;
-      window.context = new AudioContext();
-      window.bufferLoader = new BufferLoader(
-        window.context,
-        [
-        'assets/sounds/piano-c.m4a',
-        'assets/sounds/piano-d.m4a',
-        'assets/sounds/piano-e.m4a',
-        'assets/sounds/piano-g.m4a',
-        'assets/sounds/piano-a.m4a',
-        ],
-        function () {}
-      );
-        window.bufferLoader.load();
-    }
-    catch(e) {
-      alert('Web Audio API is not supported in this browser');
-    }
-  }
-</script>
-
-<!-- Load a custom element definitions in `waitFor` and return a promise -->
-<script type="module">
-    WebComponents.waitFor(() => {
-        // At this point we are guaranteed that all required polyfills have
-        // loaded, and can use web components API's.
-        // The standard pattern is to load element definitions that call
-        // `customElements.define` here.
-        // Note: returning the import's promise causes the custom elements
-        // polyfill to wait until all definitions are loaded and then upgrade
-        // the document in one batch, for better performance.
-        // appReady = true;
-    
-        return import('./src/pie-app.js');
-    });
-</script>
 </html>
