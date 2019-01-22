@@ -21,8 +21,8 @@ class PlayButton extends PolymerElement {
                 -webkit-tap-highlight-color: transparent; /* Android */
             }
             svg {
-                height: 40px;
-                width: 40px;
+                height: 30px;
+                width: 30px;
                 display: block;
             }
             [hidden] {

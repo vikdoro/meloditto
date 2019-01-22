@@ -15,7 +15,11 @@ class PieApp extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
                 max-height: 100vh;
                 background: #202124;
                 margin: 0 auto;
-                --cell-size: 70px;
+                --cell-size: 88px;
+            }
+            .colors {
+                background: #89A7A7;
+                background: #A23B72;
             }
             #container {
                 height: 100%;
@@ -24,19 +28,14 @@ class PieApp extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
             .wrapper {
                 position: relative;
                 opacity: 1;
-                width: calc((var(--cell-size) * 9) + 18px);
                 width: 100vw;
-                max-width: 440px;
+                max-width: 400px;
                 height: 120vw;
-                max-height: 528px;
+                max-height: 480px;
                 background: #22272d;
             }
-            .inner-wrapper {
-                position: absolute;
-                top: 0;
-                bottom: 0;
-                left: 0;
-                right: 0;
+            .cell-container {
+                padding: 24px 18px 30px;
             }
             .top-section {
                 width: 100%;
@@ -54,7 +53,7 @@ class PieApp extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
             }
             #note-bars {
                 width: 100%;
-                height: 16px;
+                height: 12px;
                 opacity: 1;
                 background: #22272d;
                 box-sizing: border-box;
@@ -70,8 +69,8 @@ class PieApp extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
                 margin-left: 0;
             }
             play-button {
-                width: 72px;
-                height: 72px;
+                width: 60px;
+                height: 60px;
                 opacity: 1;
                 position: absolute;
                 top: 6px;
@@ -82,11 +81,15 @@ class PieApp extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
                 background: green;
             }
             .cell {
-                flex: 1;
-                height: var(--cell-size);        
-                width: var(--cell-size);
+                height: 100%;
+                width: 50px;
+                flex: 1 1 auto;
                 transform: scale(0.9);
-                /*border: 1px solid white; -->*/
+                border: 1px solid white;
+                border: none;
+                display: flex;
+                align-items: center;
+                justify-content: center;
             }           
             .key {
                 background: transparent;
@@ -101,52 +104,107 @@ class PieApp extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
             .sector:hover {
                 background: #009;
             }
-            #note-1 {
-                width: 64px;
-                height: 64px;
-                background: #7EBDC2;
+            .row {
+                flex: 1;
+            }
+            .color .note {
+                width: 33px;
+                height: 33px;
+                background: #EFE6DD;
+                position: relative;
+                top: 0;
+                right: 0px;
+                transform: scale(0.8);
+            }
+            #note-7b {
+                top: -24px;
+                right: -12px;
+            }
+            #note-7 {
+                width: 34px;
+                height: 34px;
+                background: #7e57c2;
+                background: #5c6bc0;
+                border-radius: 50%;
+            }
+            #note-6 {
+                width: 34px;
+                height: 34px;
+                background: #89A7A7;
+                background: #F3DFA2;
+                background: #5c6bc0;
+                border-radius: 50%;
+            }
+            #note-5 {
+                width: 34px;
+                height: 34px;
+                background: #8F9EF3;
+                background: #eb854c;
+                background: #7e57c2;
+                background: #7CC6FE;
+                transform: rotate(45deg) scale(0.92);
+            }
+            #note-5b {
+                top: 12px;
+                right: -12px;
             }
             :host([reset]) .progress-section {
                 background: #c62828;
             }
             #note-2 {
-                width: 0; 
-                height: 0; 
-                border-left: 40px solid transparent;
-                border-right: 40px solid transparent;
-                border-top: 44px solid #EFE6DD;
-                transform: rotate(-45deg);
+                width: 40px;
+                height: 40px;
+                background: #D8B4E2;
+                background: #EFE6DD;
+                background: #5c6bc0;
+                transform: scale(0.82);
+                border-radius: 50%;
             }
             #note-3 {
-                width: 0; 
-                height: 0; 
-                border-left: 36px solid transparent;
-                border-right: 36px solid transparent;
-                border-bottom: 66px solid #7e57c2;
+                width: 40px;
+                height: 40px;
+                background: #D56EA5;
+                background: #7e57c2;
+                background: #5c6bc0;
+                background: #7CC6FE;
+                border-radius: 50%;
+                position: relative;
+                top: -24px;
+                left: -6px;
+            }
+            #note-3b {
+                background: #5c6bc0;
+                background: #56A0D8;
+                background: #7CC6FE;
             }
             #note-4 {
-                width: 64px;
-                height: 64px;
-                background: #5c6bc0;
-                transform: rotate(45deg) scale(0.92);
-            }
-            #note-5 {
-                width: 64px;
-                height: 64px;
+                width: 34px;
+                height: 34px;
                 background: #F3DFA2;
+                background: #5c6bc0;
                 border-radius: 50%;
+            }
+            #note-2b {
+                right: -12px;
+            }
+            #note-1 {
+                width: 40px;
+                height: 40px;
+                background: #7e57c2;
+                background: #5c6bc0;
+                background: #7CC6FE;
             }
             .concealed {
                 background: transparent;
             }
             .invisible {
-                opacity: 0;
-                visibility: hidden;
+                opacity: 0.00;
+                
             }
             #play-button-container {
                 position: relative;
-                width: 84px;
-                height: 84px;
+                width: 72px;
+                height: 72px;
             }
             #play-button-container svg {
                 position: absolute;
@@ -154,17 +212,14 @@ class PieApp extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
                 left: 0px;
             }
             #play-button-container svg {
-                width: 84px;
-                height: 84px;
+                width: 72px;
+                height: 72px;
             }
             #play-button-container svg circle {
                 fill: none;
                 stroke: #efe6dd;
                 stroke-width: 4;
                 transform: translateZ(0);
-            }
-            #bottom-section {
-                padding-bottom: 8px;
             }
             [hidden] {
                 display: none !important;
@@ -177,104 +232,102 @@ class PieApp extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
                     <iron-icon icon="pie-icons:close"></iron-icon>
                 </div>
             </div>
-            <div class="wrapper">
-                <div class="inner-wrapper vertical layout">
+            <div class="wrapper layout vertical">
+                <div class="cell-container flex layout vertical">
                     <div class="row horizontal layout">
                         <div class="cell"></div>
-                        <div class="cell"></div>
-                        <div class="cell"></div>
-                        <div class="cell"></div>        
-                        <div class="cell"></div>
-                        <div class="cell"></div>
-                        <div class="cell"></div>
-                        <div class="cell"></div>
-                        <div class="cell"></div>
-                    </div>
-
-                    <div class="row horizontal layout">
-                        <div class="cell"></div>
-                        <div class="cell"></div>
-                        <div class="cell"></div>
-                        <div class="cell"></div>
-                        <div class="cell key layout vertical center-center" data-note="0" on-down="hit">
-                            <div id="note-1"></div>
+                        <div class="cell invisible">
+                            <div id="note-7"></div>
                         </div>
                         <div class="cell"></div>
                         <div class="cell"></div>
                         <div class="cell"></div>
-                        <div class="cell"></div>
                     </div>
 
                     <div class="row horizontal layout">
-                        <div class="cell"></div>
-                        <div class="cell"></div>
-                        <div class="cell"></div>
-                        <div class="cell"></div>        
-                        <div class="cell"></div>
-                        <div class="cell"></div>
-                        <div class="cell key layout vertical center-center" data-note="1" on-down="hit">
-                            <div id="note-2"></div>
+                        <div class="cell color invisible">
+                            <div id="note-7b" class="note"></div>
+                        </div>
+                        <div class="cell">
+                            <div id="note-6"></div>
                         </div>
                         <div class="cell"></div>
                         <div class="cell"></div>
+                        <div class="cell"></div>
                     </div>
 
                     <div class="row horizontal layout">
                         <div class="cell"></div>
-                        <div class="cell"></div>
-                        <div class="cell key layout vertical center-center" data-note="4" on-down="hit">
+                        <div class="cell color invisible">
+                            <div id="note-6b" class="note"></div>
+                        </div>
+                        <div class="cell">
                             <div id="note-5"></div>
                         </div>
                         <div class="cell"></div>
                         <div class="cell"></div>
-                        <div class="cell"></div>
-                        <div class="cell"></div>
-                        <div class="cell key layout vertical center-center" data-note="2" on-down="hit">
-                            <div id="note-3"></div>
-                        </div>
-                        <div class="cell"></div>
                     </div>
 
                     <div class="row horizontal layout">
                         <div class="cell"></div>
                         <div class="cell"></div>
-                        <div class="cell"></div>
-                        <div class="cell"></div>   
-                        <div class="cell key layout vertical center-center" data-note="3" on-down="hit">
+                        <div class="cell color invisible">
+                            <div id="note-5b" class="note"></div>
+                        </div>
+                        <div class="cell invisible">
                             <div id="note-4"></div>
                         </div>
                         <div class="cell"></div>
+                    </div>
+
+                    <div class="row horizontal layout" style="margin-top: 18px;">
                         <div class="cell"></div>
                         <div class="cell"></div>
+                        <div class="cell"></div>
+                        <div class="cell color invisible">
+                            <div id="note-3b" class="note"></div>
+                        </div>
+                        <div class="cell">
+                            <div id="note-3"></div>
+                        </div>
+                    </div>
+
+                    <div class="row horizontal layout">
+                        <div class="cell"></div>
+                        <div class="cell"></div>
+                        <div class="cell color invisible">
+                            <div id="note-2b" class="note"></div>
+                        </div>
+                        <div class="cell">
+                            <div id="note-2"></div>
+                        </div>
                         <div class="cell"></div>
                     </div>
 
                     <div class="row horizontal layout">
                         <div class="cell"></div>
                         <div class="cell"></div>
-                        <div class="cell"></div>
-                        <div class="cell"></div>
-                        <div class="cell"></div>
-                        <div class="cell"></div>
-                        <div class="cell"></div>
+                        <div class="cell">
+                            <div id="note-1"></div>
+                        </div>
                         <div class="cell"></div>
                         <div class="cell"></div>
                     </div>
-                    <div id="note-bars" class="horizontal layout">
-                        <template is="dom-repeat" items="[[botSequence]]">
-                            <div class$="[[_computeProgressClass(item, index, progressIndex, playbackIndex)]]"></div>
-                        </template>
-                    </div>
+                </div>
 
+                <div id="note-bars" class="horizontal layout">
+                    <template is="dom-repeat" items="[[botSequence]]">
+                        <div class$="[[_computeProgressClass(item, index, progressIndex, playbackIndex)]]"></div>
+                    </template>
                 </div>
             </div>
             <div id="bottom-section" class="flex vertical layout center-center">
                 <div id="play-button-container" class="l-relative layout vertical center-center">
                     <svg>
                         <circle id="shape"
-                                cx="42"
-                                cy="42"
-                                r="40"
+                                cx="36"
+                                cy="36"
+                                r="36"
                                 stroke-dasharray="252"
                                 stroke-dashoffset="252"
                                 on-transitionend="onPlayButtonAnimationEnd"/>
@@ -320,6 +373,15 @@ class PieApp extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
     constructor() {
         super();
         this.generateSequence = this.generateSequence.bind(this);
+    }
+    connectedCallback() {
+        super.connectedCallback();
+        const elements = [...this.shadowRoot.querySelectorAll('.cell')];
+        elements.forEach(element => {
+            element.addEventListener('click', e => {
+                e.currentTarget.classList.toggle('invisible');
+            });
+        });
     }
     hit(e) {
         e.stopPropagation();
