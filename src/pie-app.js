@@ -35,7 +35,7 @@ class PieApp extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
                 background: #22272d;
             }
             .cell-container {
-                padding: 24px 18px 30px;
+                padding: 18px 18px 12px;
             }
             .top-section {
                 width: 100%;
@@ -123,25 +123,19 @@ class PieApp extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
             #note-7 {
                 width: 34px;
                 height: 34px;
-                background: #7e57c2;
                 background: #5c6bc0;
                 border-radius: 50%;
             }
             #note-6 {
-                width: 34px;
-                height: 34px;
-                background: #89A7A7;
+                width: 40px;
+                height: 40px;
                 background: #F3DFA2;
-                background: #5c6bc0;
                 border-radius: 50%;
             }
             #note-5 {
-                width: 34px;
-                height: 34px;
-                background: #8F9EF3;
-                background: #eb854c;
+                width: 40px;
+                height: 40px;
                 background: #7e57c2;
-                background: #7CC6FE;
                 transform: rotate(45deg) scale(0.92);
             }
             #note-5b {
@@ -152,25 +146,19 @@ class PieApp extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
                 background: #c62828;
             }
             #note-2 {
-                width: 40px;
-                height: 40px;
-                background: #D8B4E2;
-                background: #EFE6DD;
-                background: #5c6bc0;
-                transform: scale(0.82);
-                border-radius: 50%;
+                width: 0;
+                height: 0;
+                border-left: 28px solid transparent;
+                border-right: 28px solid transparent;
+                border-bottom: 32px solid #7EBDC2;
+                transform: rotate(45deg);
             }
             #note-3 {
-                width: 40px;
-                height: 40px;
-                background: #D56EA5;
-                background: #7e57c2;
-                background: #5c6bc0;
-                background: #7CC6FE;
-                border-radius: 50%;
-                position: relative;
-                top: -24px;
-                left: -6px;
+                width: 0;
+                height: 0;
+                border-left: 24px solid transparent;
+                border-right: 24px solid transparent;
+                border-bottom: 44px solid #EFE6DD;
             }
             #note-3b {
                 background: #5c6bc0;
@@ -190,16 +178,10 @@ class PieApp extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
             #note-1 {
                 width: 40px;
                 height: 40px;
-                background: #7e57c2;
                 background: #5c6bc0;
-                background: #7CC6FE;
             }
             .concealed {
                 background: transparent;
-            }
-            .invisible {
-                opacity: 0.00;
-                
             }
             #play-button-container {
                 position: relative;
@@ -234,20 +216,9 @@ class PieApp extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
             </div>
             <div class="wrapper layout vertical">
                 <div class="cell-container flex layout vertical">
-                    <div class="row horizontal layout">
-                        <div class="cell"></div>
-                        <div class="cell invisible">
-                            <div id="note-7"></div>
-                        </div>
-                        <div class="cell"></div>
-                        <div class="cell"></div>
-                        <div class="cell"></div>
-                    </div>
 
                     <div class="row horizontal layout">
-                        <div class="cell color invisible">
-                            <div id="note-7b" class="note"></div>
-                        </div>
+                        <div class="cell"></div>
                         <div class="cell">
                             <div id="note-6"></div>
                         </div>
@@ -258,9 +229,7 @@ class PieApp extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
 
                     <div class="row horizontal layout">
                         <div class="cell"></div>
-                        <div class="cell color invisible">
-                            <div id="note-6b" class="note"></div>
-                        </div>
+                        <div class="cell"></div>
                         <div class="cell">
                             <div id="note-5"></div>
                         </div>
@@ -271,22 +240,16 @@ class PieApp extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
                     <div class="row horizontal layout">
                         <div class="cell"></div>
                         <div class="cell"></div>
-                        <div class="cell color invisible">
-                            <div id="note-5b" class="note"></div>
-                        </div>
-                        <div class="cell invisible">
-                            <div id="note-4"></div>
-                        </div>
+                        <div class="cell"></div>
+                        <div class="cell"></div>
                         <div class="cell"></div>
                     </div>
 
-                    <div class="row horizontal layout" style="margin-top: 18px;">
+                    <div class="row horizontal layout">
                         <div class="cell"></div>
                         <div class="cell"></div>
                         <div class="cell"></div>
-                        <div class="cell color invisible">
-                            <div id="note-3b" class="note"></div>
-                        </div>
+                        <div class="cell"></div>
                         <div class="cell">
                             <div id="note-3"></div>
                         </div>
@@ -295,9 +258,7 @@ class PieApp extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
                     <div class="row horizontal layout">
                         <div class="cell"></div>
                         <div class="cell"></div>
-                        <div class="cell color invisible">
-                            <div id="note-2b" class="note"></div>
-                        </div>
+                        <div class="cell"></div>
                         <div class="cell">
                             <div id="note-2"></div>
                         </div>
@@ -307,7 +268,7 @@ class PieApp extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
                     <div class="row horizontal layout">
                         <div class="cell"></div>
                         <div class="cell"></div>
-                        <div class="cell">
+                        <div class="cell" data-note="0" on-down="hit">
                             <div id="note-1"></div>
                         </div>
                         <div class="cell"></div>
