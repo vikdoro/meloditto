@@ -60,14 +60,18 @@ let PiePlayerMixinInternal = (superClass) => {
                 playbackReadyToStart: {
                     type: Boolean,
                     value: true
-                }
+                },
+                lastBotNote: Boolean
             }
         }
         connectedCallback() {
             super.connectedCallback();
         }
         startPlayback() {
-            console.log('Start');
+            if (!window.context) {
+                this.init(this.startPlayback.bind(this));
+                return;
+            }
             clearTimeout(this.timerID);
             this.readyToStart = true;
             this.scheduledNotes = this.scheduledNotes.map(item => {
@@ -77,13 +81,39 @@ let PiePlayerMixinInternal = (superClass) => {
             this.scheduler();
             this.draw();
         }
+        init(cb) {
+            try {
+                window.AudioContext = window.AudioContext || window.webkitAudioContext;
+                window.context = new AudioContext();
+                window.bufferLoader = new BufferLoader(
+                    window.context,
+                    [
+                        'assets/sounds/piano-c.m4a',
+                        'assets/sounds/piano-d.m4a',
+                        'assets/sounds/piano-e.m4a',
+                        'assets/sounds/piano-g.m4a',
+                        'assets/sounds/piano-a.m4a',
+                    ],
+                    () => {
+                        cb();
+                    }
+                );
+                window.bufferLoader.load();
+            }
+            catch (e) {
+                alert('Web Audio API is not supported in this browser');
+            }
+        }
         playSound(note, time=0) {
-            console.log(note)
+            if (!window.context) {
+                this.init(this.playSound.bind(this, note, time));
+                return;
+            }
             return new Promise((resolve, reject) => {
                 this.source = window.context.createBufferSource();
                 this.source.buffer = window.bufferLoader.bufferList[note];
                 this.source.connect(window.context.destination);
-                // manually adding a non-existong property to determine if it needs to be disconnected
+                // Manually adding a property to be able to determine if it needs to be disconnected
                 this.source.connected = true;
                 this.source.onended = () => {
                     this.source.connected = false;
@@ -108,6 +138,7 @@ let PiePlayerMixinInternal = (superClass) => {
                 clearTimeout(this.timerID);
                 this.set('sources', []);
                 this.nextIndex = 0;
+
                 // If playback hasn't completed at least once, reset the playbackIndex
                 if (this.playbackIndex < this.scheduledNotes.length - 1) {
                     this.playbackIndex = -1;
@@ -121,13 +152,17 @@ let PiePlayerMixinInternal = (superClass) => {
             let currentNote = this.scheduledNotes[this.nextIndex];
             while (this.playback && currentNote && currentNote.time < window.context.currentTime + this.scheduleAheadTime) {
                 let isLastnote = this.nextIndex === this.scheduledNotes.length - 1;
+                // Signal last note being played, so user can start playing
+                if (isLastnote) {
+                    this.lastBotNote = true;
+                }
                 this.playSound(currentNote.note, currentNote.time).then(() => {
                     if (isLastnote) {
                         this.playback = false;
+                        this.lastBotNote = false;
                     };
                 });
                 this.push('scheduledNotesForDrawing', { time: currentNote.time } );
-                // console.log('while')
                 this.nextIndex++;
                 currentNote = this.scheduledNotes[this.nextIndex];
             }

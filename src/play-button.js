@@ -10,7 +10,7 @@ class PlayButton extends PolymerElement {
             }
             button {
                 box-sizing: border-box;
-                padding: 16px;           
+                padding: 15px;           
                 border: none;
                 outline: none;       
                 fill: rgba(255,255,255,0.9);

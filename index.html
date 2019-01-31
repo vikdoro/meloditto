@@ -2,10 +2,12 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' data: gap: https://ssl.gstatic.com; style-src 'self' 'unsafe-inline'; media-src *">
     <style>
         * {
             box-sizing: border-box;
             font-family: 'Nunito', sans-serif;
+            -webkit-tap-highlight-color: transparent;
         }
 
         html, body {
@@ -15,6 +17,7 @@
             background: #202124;
             -ms-touch-action: manipulation;
             touch-action: manipulation;
+            font-family: "SF Pro Display","SF Pro Icons","Helvetica Neue","Helvetica","Arial",sans-serif;
         }
 
         pie-app {
@@ -24,29 +27,11 @@
 </head>
 <body>
     <pie-app id="app"></pie-app>
+    <script src="node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
     <script src="cordova.js"></script>
     <script src="cordova_plugins.js"></script>
-    <script src="node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
     <script src="loadBuffer.js"></script>
-    <script>
-        document.addEventListener('deviceready', () => {
-            cordova.plugins.backgroundMode.enable();
-        }, false);
-    </script>
-    <!-- Load a custom element definitions in `waitFor` and return a promise -->
-    <script type="module">
-        WebComponents.waitFor(() => {
-            // At this point we are guaranteed that all required polyfills have
-            // loaded, and can use web components API's.
-            // The standard pattern is to load element definitions that call
-            // `customElements.define` here.
-            // Note: returning the import's promise causes the custom elements
-            // polyfill to wait until all definitions are loaded and then upgrade
-            // the document in one batch, for better performance.
-            // appReady = true;
-        
-            return import('./src/pie-app.js');
-        });
-    </script>
+    <script src="init.js"></script>
+    <script type="module" src="src/pie-app.js"></script>
 </body>
 </html>
