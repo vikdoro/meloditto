@@ -11,6 +11,12 @@ class PieHome extends GestureEventListeners(PolymerElement) {
             :host {
                 display: block;
                 color: #f5f5f5;
+                background: #202124;
+            }
+            .home-card {
+                background: #22272d;
+                padding: 24px;
+                margin-bottom: 18px;
             }
             h1 {
                 font-size: 20px;
@@ -18,8 +24,8 @@ class PieHome extends GestureEventListeners(PolymerElement) {
             }
             h3 {
                 font-size: 20px;
-                color: #f5f5f5;
-                margin: 0 0 42px;
+                color: #bdbdbd;
+                margin: 0 30px 18px;
             }
             p {
                 text-align: center;
@@ -27,7 +33,6 @@ class PieHome extends GestureEventListeners(PolymerElement) {
                 margin: 0 0 36px;
             }
             #pie-home-body {
-                padding: 42px 30px;
             }
             #top-section {
                 width: 100%;
@@ -101,11 +106,25 @@ class PieHome extends GestureEventListeners(PolymerElement) {
                 font-size: 12px;
                 text-transform: uppercase;
                 letter-spacing: 0.9px;
-                background: #22272d;
+                background: #202124;
                 color: #FFF;
-                margin: 0 auto 42px;
+                margin: 0 auto;
                 border: 1px solid #cfd8dc;
                 border-radius: 5px;
+            }
+            .level-label {
+                border-bottom: 1px solid #f5f5f5;
+                padding: 12px 0;
+            }
+            .level-bar.selected .level-selection-check-container {
+                background: yellow;
+            }
+            .level-selection-check-container {
+                width: 48px;
+                text-align: center;
+            }
+            #level-selector {
+                margin-bottom: 24px;
             }
             button#upgrade-btn {
                 padding: 12px 18px;
@@ -121,38 +140,66 @@ class PieHome extends GestureEventListeners(PolymerElement) {
                 display: none !important;
             }
         </style>
-        <div id="home-top-bar" class="horizontal layout center">
-            <h1 class="flex">Settings</h1>
+        <div id="home-top-bar" class="horizontal layout center end-justified">
             <div id="quit-settings-trigger" on-down="quitSettings">
                 <iron-icon icon="pie-icons:close"></iron-icon>
             </div>
         </div>
         <div id="pie-home-body">
-            
-            <button id="cta"
-                    type="button"
-                    on-down="restartGame">Restart</button>
-            <button id="cta"
-                    type="button"
-                    data-warmup
-                    on-down="restartGame">Restart with warmup</button>
-            <template is="dom-if" if="[[isPremiumActive]]">
-                <div class="horizontal layout center">
-                    <div class="flex">Premium samples</div>
-                    <div class="switch-container">
-                        <input id="premium-switch" class="switch" type="checkbox">
-                        <label for="premium-switch"></label>
+            <h3>Game</h3>
+            <div class="home-card">
+                <div id="level-selector">
+                    <div class="level-bar horizontal layout"
+                         data-game-level="3"
+                         on-down="selectGameLevel">
+                        <div class="level-selection-check-container">X</div>
+                        <div class="level-label flex">One</div>
+                    </div>
+                    <div class="level-bar horizontal layout"
+                         data-game-level="4"
+                         on-down="selectGameLevel">
+                        <div class="level-selection-check-container"></div>
+                        <div class="level-label flex">Two</div>
+                    </div>
+                    <div class="level-bar horizontal layout"
+                         data-game-level="5"
+                         on-down="selectGameLevel">
+                        <div class="level-selection-check-container"></div>
+                        <div class="level-label flex">Three</div>
                     </div>
                 </div>
-            </template>
-            <template is="dom-if" if="[[!isPremiumActive]]">
-                <div class="vertical layout center">
-                    <p>Play with the sound of a real piano:</p>
-                    <button id="cta"
-                                type="button"
-                                on-down="openPurchaseDialog">Upgrade to premium</button>
-                </div>
-            </template>
+                <button id="cta"
+                        type="button"
+                        data-game-start
+                        on-down="restartGame">Start game</button>
+            </div>
+            <h3>Training</h3>
+            <div class="home-card">
+                <button id="cta"
+                        type="button"
+                        data-warmup
+                        on-down="restartGame">Start training</button>
+            </div>
+            <h3>Premium</h3>
+            <div class="home-card"> 
+                <template is="dom-if" if="[[isPremiumActive]]">
+                    <div class="horizontal layout center">
+                        <div class="flex">Footer</div>
+                        <div class="switch-container">
+                            <input id="premium-switch" class="switch" type="checkbox">
+                            <label for="premium-switch"></label>
+                        </div>
+                    </div>
+                </template>
+                <template is="dom-if" if="[[!isPremiumActive]]">
+                    <div class="vertical layout center">
+                        <p>Upload the doc</p>
+                        <button id="cta"
+                                    type="button"
+                                    on-down="openPurchaseDialog">Add annotation</button>
+                    </div>
+                </template>
+            </div>
         </div>
         `;
     }
@@ -163,6 +210,10 @@ class PieHome extends GestureEventListeners(PolymerElement) {
             isPremiumActive: {
                 type: Boolean,
                 value: false
+            },
+            gameLevel: {
+                type: Number,
+                value: 0
             }
         }
     }
@@ -193,13 +244,26 @@ class PieHome extends GestureEventListeners(PolymerElement) {
             })
         );
     }
+    selectGameLevel(e) {
+        const elements = [...this.shadowRoot.querySelectorAll('.level-bar')];
+        elements.forEach(el => {
+            el.classList.remove('selected');
+        });       
+        const selectionLabel = e.currentTarget.getAttribute('data-game-level');
+        this.gameLevel = parseInt(e.currentTarget.getAttribute('data-game-level'));
+        e.currentTarget.classList.add('selected');
+    }
     restartGame(e) {
+        const gameLevel = e.currentTarget.getAttribute('data-game-start') !== null ?
+             this.gameLevel : 0;
+        const warmupLevel = e.currentTarget.getAttribute('data-warmup') !== null ? 1 : 0;
         this.dispatchEvent(
             new CustomEvent('restart-game-request', {
                 bubbles: true,
                 composed: true,
                 detail: {
-                    warmup: e.currentTarget.getAttribute('data-warmup') !== null
+                    warmupLevel,
+                    gameLevel
                 }
             })
         );

@@ -253,7 +253,7 @@ class PieGame extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
                              style="position: relative; top: 4px; left: -1px;"
                              data-note="2"
                              on-down="hit"
-                             hidden$="[[_isSmallerButNotZero(warmupIndex, 8)]]">
+                             hidden$="[[_isSmallerButNotZero(revealIndex, 4)]]">
                             <div id="note-2"></div>
                         </div>
                     </div>
@@ -265,7 +265,7 @@ class PieGame extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
                         <div class="cell key layout vertical center-center"
                              data-note="1"
                              on-down="hit"
-                             hidden$="[[_isSmallerButNotZero(warmupIndex, 14)]]">
+                             hidden$="[[_isSmallerButNotZero(revealIndex, 5)]]">
                             <div id="note-1"></div>
                         </div>
                         <div class="cell"></div>
@@ -277,7 +277,7 @@ class PieGame extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
                         <div class="cell key layout vertical center-center"
                              data-note="0"
                              on-down="hit"
-                             hidden$="[[_isSmallerButNotZero(warmupIndex, 3)]]">
+                             hidden$="[[_isSmallerButNotZero(revealIndex, 3)]]">
                             <div id="note-0"></div>
                         </div>
                         <div class="cell"></div>
@@ -350,6 +350,13 @@ class PieGame extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
             hasStartedGame: {
                 type: Boolean,
                 value: false
+            },
+            gameLevel: {
+                type: Number,
+                value: 0
+            },
+            revealIndex: {
+                computed: 'computeRevealIndex(gameLevel, warmupIndex)'
             }
         }
     }
@@ -434,6 +441,23 @@ class PieGame extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
                 this.startPlaybackWithDelay();
             }, 850);
         }
+    }
+    computeRevealIndex (gameLevel, warmupIndex) {
+        let response;
+        if (this.warmupIndex) {
+            if (0 <= this.warmupIndex && this.warmupIndex < 3) {
+                response = 2; 
+            } else if (3 <= this.warmupIndex && this.warmupIndex < 8) {
+                reponse = 3;
+            } else if (8 <= this.warmupIndex && this.warmupIndex < 14) {
+                response = 4;
+            } else if (14 <= this.warmupIndex) {
+                response = 5;
+            }
+        } else if (this.gameLevel) {
+            response = this.gameLevel;
+        }
+        return response;
     }
     startPlaybackWithDelay() {
         this.shadowRoot.querySelector('#play-button-container svg circle').style.transition = 'stroke-dashoffset 1500ms cubic-bezier(0.2, 0.2, 0.7, 0.8)';
@@ -578,6 +602,14 @@ class PieGame extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
         return response;
     }
     _getPitchArray() {
+        const levelMap = {
+            3: [3, 4, 0],
+            4: [3, 4, 0, 2],
+            5: [3, 4, 0, 2, 1]
+        };
+        if (this.gameLevel) {
+            return levelMap[this.gameLevel];
+        }
         let response;
         let index = this.warmupIndex;
         if (index) {
@@ -613,17 +645,14 @@ class PieGame extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
         this.set('scheduledNotes', tempArray);
         setTimeout(this.startPlayback.bind(this), 0);
     }
-    restartGame(warmup) {
+    restartGame(gameLevel, warmupLevel) {
         this.set('botSequence', []);
         this.set('userSequence', []);
         this.progressIndex = -1;
         this.playbackIndex = -1;
         this.score = 0;
-        if (warmup) {
-            this.warmupIndex = 1;
-        } else {
-            this.warmupIndex = 0;
-        }
+        this.warmupIndex = warmupLevel;
+        this.gameLevel = gameLevel;
     }
     _computeProgressClass(item, itemIndex, progressIndex, playbackIndex) {
         let classString = 'progress-section';

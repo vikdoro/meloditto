@@ -56,7 +56,9 @@ class PieApp extends GestureEventListeners(PolymerElement) {
     }
     proceedToRestartGame(e) {
         this.section = 'game';
-        this.$['pie-game'].restartGame(e.detail.warmup);
+        const gameLevel = e.detail.gameLevel;
+        const warmupLevel = e.detail.warmupLevel;
+        this.$['pie-game'].restartGame(gameLevel, warmupLevel);
     }
 }
 customElements.define(PieApp.is, PieApp);
