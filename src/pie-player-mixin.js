@@ -61,6 +61,10 @@ let PiePlayerMixinInternal = (superClass) => {
                     type: Boolean,
                     value: true
                 },
+                sampleStartIndex: {
+                    type: Number,
+                    value: 0
+                },
                 lastBotNote: Boolean
             }
         }
@@ -82,20 +86,19 @@ let PiePlayerMixinInternal = (superClass) => {
             this.draw();
         }
         init(cb) {
+            console.log('init yo');
             try {
                 window.AudioContext = window.AudioContext || window.webkitAudioContext;
-                window.context = new AudioContext();
+                if (!window.context) {
+                    window.context = new AudioContext();
+                }
                 window.bufferLoader = new BufferLoader(
                     window.context,
-                    [
-                        'assets/sounds/piano-c.m4a',
-                        'assets/sounds/piano-d.m4a',
-                        'assets/sounds/piano-e.m4a',
-                        'assets/sounds/piano-g.m4a',
-                        'assets/sounds/piano-a.m4a',
-                    ],
+                    this.sampleList,
                     () => {
-                        cb();
+                        if (typeof cb === 'function') {
+                            cb();
+                        }
                     }
                 );
                 window.bufferLoader.load();
@@ -111,7 +114,7 @@ let PiePlayerMixinInternal = (superClass) => {
             }
             return new Promise((resolve, reject) => {
                 this.source = window.context.createBufferSource();
-                this.source.buffer = window.bufferLoader.bufferList[note];
+                this.source.buffer = window.bufferLoader.bufferList[note + this.sampleStartIndex];
                 this.source.connect(window.context.destination);
                 // Manually adding a property to be able to determine if it needs to be disconnected
                 this.source.connected = true;

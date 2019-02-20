@@ -14,20 +14,42 @@ class PieApp extends GestureEventListeners(PolymerElement) {
             :host {
                 display: block;
             }
-            #pager, #pager > * {
+            #pager, #pager > *, #splash {
                 height: 100%;
+            }
+            #splash {
+                background: #1B1F23;
+            }
+            button {
+                display: block;
+                font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+                font-size: 12px;
+                text-transform: uppercase;
+                letter-spacing: 1.2px;
+                background: #1B1F23;
+                color: #B9BEC2;
+                padding: 12px 18px;
+                margin: 0 auto;
+                border: 1px solid rgba(255,255,255,0.5);
+                border-radius: 5px;
             }
             [hidden] {
                 display: none !important;
             }
         </style>
         <iron-pages id="pager" attr-for-selected="data-route" selected="[[section]]">
+            <div id="splash" class="vertical layout center-center" data-route="splash">
+                <button type="button" on-down="startGame">Start Game</button>
+            </div>
             <pie-home id="pie-home"
                       data-route="home"
                       on-quit-settings-request="navigateToGame"
-                      on-restart-game-request="proceedToRestartGame"></pie-home>
+                      on-restart-game-request="proceedToRestartGame"
+                      premium-user="[[premiumUser]]"
+                      premium-sound="{{premiumSound}}"></pie-home>
             <pie-game id="pie-game"
                       data-route="game"
+                      premium-sound="[[premiumSound]]"
                       on-quit-game-request="navigateToHome"></pie-game>
         </iron-pages>
         `;
@@ -38,7 +60,15 @@ class PieApp extends GestureEventListeners(PolymerElement) {
         return {
             section: {
                 type: String,
-                value: 'home'
+                value: 'game'
+            },
+            premiumUser: {
+                type: Boolean,
+                value: true
+            },
+            premiumSound: {
+                type: Boolean,
+                value: false
             }
         }
     }
@@ -53,6 +83,11 @@ class PieApp extends GestureEventListeners(PolymerElement) {
     }
     navigateToGame() {
         this.section = 'game';
+    }
+    startGame () {
+        this.section = 'game';
+        this.$['pie-game'].init();
+        this.$['pie-game'].togglePlayback();
     }
     proceedToRestartGame(e) {
         this.section = 'game';

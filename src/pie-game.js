@@ -14,7 +14,8 @@ class PieGame extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
                 display: block;
                 max-width: 648px;
                 max-height: 100vh;
-                background: #202124;
+                overflow: hidden;
+                background: #1B1F23;
                 margin: 0 auto;
                 --cell-size: 88px;
             }
@@ -33,7 +34,7 @@ class PieGame extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
                 max-width: 420px;
                 height: 120vw;
                 max-height: 504px;
-                background: #22272d;
+                background: #13171B;
             }
             .cell-container {
                 padding: 18px 18px 12px;
@@ -41,7 +42,7 @@ class PieGame extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
             #top-section {
                 width: 100%;
                 opacity: 1;
-                color: #f5f5f5;
+                color: #9fa4a8;
             }
             #quit-game-trigger {
                 box-sizing: border-box;
@@ -59,10 +60,10 @@ class PieGame extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
                 width: 100%;
                 height: 12px;
                 opacity: 1;
-                background: #22272d;
+                background: #13171b;
                 box-sizing: border-box;
                 padding: 0 1px;
-                margin: 6px 0;
+                margin: 4px 0;
             }
             .progress-section {
                 background: slategray;
@@ -357,6 +358,15 @@ class PieGame extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
             },
             revealIndex: {
                 computed: 'computeRevealIndex(gameLevel, warmupIndex)'
+            },
+            premiumSound: {
+                type: Boolean,
+                value: false,
+                observer: '_onPremiumSoundChanged'
+            },
+            firstPlayback: {
+                type: Boolean,
+                value: true
             }
         }
     }
@@ -371,8 +381,30 @@ class PieGame extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
     startTutorial() {
         this.openTooltip(this.$['play-button-container']);
     }
+    _onPremiumSoundChanged(premium) {
+        if (premium) {
+            this.sampleList = ([
+                'assets/sounds/ppiano-1.wav',
+                'assets/sounds/ppiano-2.wav',
+                'assets/sounds/ppiano-3.wav',
+                'assets/sounds/ppiano-4.wav',
+                'assets/sounds/ppiano-5.wav',
+            ]);
+        } else {
+            this.sampleList = ([
+                'assets/sounds/piano-1.wav',
+                'assets/sounds/piano-2.wav',
+                'assets/sounds/piano-3.wav',
+                'assets/sounds/piano-4.wav',
+                'assets/sounds/piano-5.wav',
+            ]);
+        }
+        console.log('changed handler');
+        this.init();
+    }
     hit(e) {
         e.stopPropagation();
+        const noteIndex = parseInt(e.currentTarget.getAttribute('data-note'));
 
         // No action if playback is ongoing, except if it's the last note
         if (this.playback && !this.lastBotNote) {
@@ -391,12 +423,13 @@ class PieGame extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
 
         // Stop showing red on the notebars
         this.reset = false
-        this.playSound(note);
+        
         element.classList.add('hit');
         setTimeout(() => {
             element.classList.remove('hit');
         }, 250);
 
+        this.playSound(note);
         if (!this.botSequence || this.botSequence.length === 0) {
             return;
         }
@@ -464,6 +497,13 @@ class PieGame extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
         this.shadowRoot.querySelector('#play-button-container svg circle').setAttribute('stroke-dashoffset', 0);
     }
     togglePlayback() {
+        if (this.firstPlayback) {
+            this.userGestureHappened = true;
+            this.startPlaybackWithDelay();
+            this.init();
+            this.firstPlayback = false;
+            return;
+        }
         this.playback = !this.playback;
         // Playback button hit straight after winning
         this.resetPlaybackButtonStrokeOffset();
@@ -653,6 +693,7 @@ class PieGame extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
         this.score = 0;
         this.warmupIndex = warmupLevel;
         this.gameLevel = gameLevel;
+        setTimeout(this.startPlaybackWithDelay.bind(this), 0);
     }
     _computeProgressClass(item, itemIndex, progressIndex, playbackIndex) {
         let classString = 'progress-section';
@@ -674,6 +715,7 @@ class PieGame extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
         this.shadowRoot.querySelector('#play-button-container svg circle').setAttribute('stroke-dashoffset', 252);
     }
     onPlayButtonAnimationEnd() {
+        console.log('ss')
         this.togglePlayback();
     }
     _isSmallerButNotZero(compared, base) {

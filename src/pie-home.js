@@ -10,27 +10,30 @@ class PieHome extends GestureEventListeners(PolymerElement) {
         <style is="custom-style" include="iron-flex iron-flex-alignment iron-flex-factors">
             :host {
                 display: block;
-                color: #f5f5f5;
-                background: #202124;
+                color: #9fa4a8;
+                background: #1B1F23;
             }
             .home-card {
-                background: #22272d;
+                background: #13171b;
                 padding: 24px;
-                margin-bottom: 18px;
+            }
+            .home-card:not(:last-of-type) {
+                margin-bottom: 16px;
             }
             h1 {
                 font-size: 20px;
                 margin: 24px 0 0 24px;
             }
             h3 {
-                font-size: 20px;
+                font-size: 16px;
                 color: #bdbdbd;
-                margin: 0 30px 18px;
+                letter-spacing: 0.8px;
+                margin: 0 32px 16px;
             }
             p {
                 text-align: center;
                 line-height: 20px;
-                margin: 0 0 36px;
+                margin: 0 0 24px;
             }
             #pie-home-body {
             }
@@ -41,7 +44,10 @@ class PieHome extends GestureEventListeners(PolymerElement) {
             }
             #quit-settings-trigger {
                 box-sizing: border-box;
-                padding: 16px 12px 16px 16px;
+                padding: 16px 12px 6px 16px;
+            }
+            #premium-switch {
+                touch-action: manipulation;
             }
             .switch-container {
                 width: 48px;
@@ -65,6 +71,7 @@ class PieHome extends GestureEventListeners(PolymerElement) {
                 height: 24px;
                 background-color: #dddddd;
                 border-radius: 24px;
+                touch-action: manipulation;
             }
 
             .switch+ label:before,
@@ -102,22 +109,22 @@ class PieHome extends GestureEventListeners(PolymerElement) {
 
             button {
                 display: block;
-                font-family: "SF Pro Display","SF Pro Icons","Helvetica Neue","Helvetica","Arial",sans-serif;
+                font-family: -apple-system, BlinkMacSystemFont, sans-serif;
                 font-size: 12px;
                 text-transform: uppercase;
-                letter-spacing: 0.9px;
-                background: #202124;
-                color: #FFF;
+                letter-spacing: 1.2px;
+                background: #1B1F23;
+                color: #B9BEC2;
                 margin: 0 auto;
-                border: 1px solid #cfd8dc;
+                border: 1px solid rgba(255,255,255,0.5);
                 border-radius: 5px;
             }
             .level-label {
-                border-bottom: 1px solid #f5f5f5;
+                border-bottom: 1px solid rgba(255,255,255,0.3);
                 padding: 12px 0;
             }
-            .level-bar.selected .level-selection-check-container {
-                background: yellow;
+            .level-bar:not(.selected) iron-icon {
+                display: none !important;
             }
             .level-selection-check-container {
                 width: 48px;
@@ -152,20 +159,26 @@ class PieHome extends GestureEventListeners(PolymerElement) {
                     <div class="level-bar horizontal layout"
                          data-game-level="3"
                          on-down="selectGameLevel">
-                        <div class="level-selection-check-container">X</div>
-                        <div class="level-label flex">One</div>
+                        <div class="level-selection-check-container vertical layout center-center">
+                            <iron-icon icon="pie-icons:done"></iron-icon>
+                        </div>
+                        <div class="level-label flex">3 notes</div>
                     </div>
                     <div class="level-bar horizontal layout"
                          data-game-level="4"
                          on-down="selectGameLevel">
-                        <div class="level-selection-check-container"></div>
-                        <div class="level-label flex">Two</div>
+                        <div class="level-selection-check-container vertical layout center-center">
+                            <iron-icon icon="pie-icons:done"></iron-icon>
+                        </div>
+                        <div class="level-label flex">4 notes</div>
                     </div>
-                    <div class="level-bar horizontal layout"
+                    <div class="level-bar horizontal layout selected"
                          data-game-level="5"
                          on-down="selectGameLevel">
-                        <div class="level-selection-check-container"></div>
-                        <div class="level-label flex">Three</div>
+                        <div class="level-selection-check-container vertical layout center-center">
+                            <iron-icon icon="pie-icons:done"></iron-icon>
+                        </div>
+                        <div class="level-label flex">5 notes</div>
                     </div>
                 </div>
                 <button id="cta"
@@ -182,21 +195,21 @@ class PieHome extends GestureEventListeners(PolymerElement) {
             </div>
             <h3>Premium</h3>
             <div class="home-card"> 
-                <template is="dom-if" if="[[isPremiumActive]]">
+                <template is="dom-if" if="[[premiumUser]]">
                     <div class="horizontal layout center">
-                        <div class="flex">Footer</div>
+                        <div class="flex">Premium samples</div>
                         <div class="switch-container">
-                            <input id="premium-switch" class="switch" type="checkbox">
-                            <label for="premium-switch"></label>
+                            <input id="premium-switch" class="switch" type="checkbox" on-change="onPremiumSoundChange">
+                            <label for="premium-switch" on-down="switchPremiumSound"></label>
                         </div>
                     </div>
                 </template>
-                <template is="dom-if" if="[[!isPremiumActive]]">
+                <template is="dom-if" if="[[!premiumUser]]">
                     <div class="vertical layout center">
-                        <p>Upload the doc</p>
+                        <p>Play with the sound of a real piano</p>
                         <button id="cta"
                                     type="button"
-                                    on-down="openPurchaseDialog">Add annotation</button>
+                                    on-down="openPurchaseDialog">Buy premium</button>
                     </div>
                 </template>
             </div>
@@ -207,9 +220,12 @@ class PieHome extends GestureEventListeners(PolymerElement) {
     static get is() { return 'pie-home'; }
     static get properties() {
         return {
-            isPremiumActive: {
+            premiumUser: {
+                type: Boolean
+            },
+            premiumSound: {
                 type: Boolean,
-                value: false
+                notify: true,
             },
             gameLevel: {
                 type: Number,
@@ -223,9 +239,19 @@ class PieHome extends GestureEventListeners(PolymerElement) {
     connectedCallback() {
         super.connectedCallback();
     }
+    onPremiumSoundChange(e) {
+        this.premiumSound = e.currentTarget.checked;
+    }
     purchaseConfirmed() {
         console.log('dismissed');
-        store.order('premium1');
+        store.order('melowise1')
+                .initiated(function () {
+                    console.log('ORDER INITIATED YOYOYOYO');
+                    // order initiated, waiting approval...
+                })
+                .error(function (err) {
+                    console.log('ORDER ERRORR BOOOOOOOO');
+                });
     }
     openPurchaseDialog() {
         console.log('open dialog');
@@ -252,6 +278,11 @@ class PieHome extends GestureEventListeners(PolymerElement) {
         const selectionLabel = e.currentTarget.getAttribute('data-game-level');
         this.gameLevel = parseInt(e.currentTarget.getAttribute('data-game-level'));
         e.currentTarget.classList.add('selected');
+    }
+    switchPremiumSound(e) {
+        e.preventDefault();
+        this.shadowRoot.querySelector('#premium-switch').checked = !this.shadowRoot.querySelector('#premium-switch').checked;
+        console.log('switch premium');
     }
     restartGame(e) {
         const gameLevel = e.currentTarget.getAttribute('data-game-start') !== null ?
