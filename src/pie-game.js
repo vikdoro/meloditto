@@ -82,9 +82,6 @@ class PieGame extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
                 left: 10px;
                 transform: translateZ(0);
             }
-            .right {
-                background: green;
-            }
             .cell {
                 height: 100%;
                 width: 50px;
@@ -102,7 +99,7 @@ class PieGame extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
                 transform: scale(1);
             }
             .correct {
-                background: green;
+                background: #1b5e20;
             }
             .sector:hover {
                 background: #009;

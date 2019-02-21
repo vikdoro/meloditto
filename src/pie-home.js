@@ -69,7 +69,7 @@ class PieHome extends GestureEventListeners(PolymerElement) {
                 padding: 2px;
                 width: 48px;
                 height: 24px;
-                background-color: #dddddd;
+                background-color: #B9BEC2;
                 border-radius: 24px;
                 touch-action: manipulation;
             }
@@ -100,7 +100,7 @@ class PieHome extends GestureEventListeners(PolymerElement) {
             }
 
             .switch:checked + label:before {
-                background-color: #66bb6a;
+                background-color: #1b5e20;
             }
 
             .switch:checked + label:after {
