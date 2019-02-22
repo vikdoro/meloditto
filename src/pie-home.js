@@ -13,45 +13,60 @@ class PieHome extends GestureEventListeners(PolymerElement) {
                 color: #9fa4a8;
                 background: #1B1F23;
             }
+
             .home-card {
                 background: #13171b;
                 padding: 24px;
             }
+
             .home-card:not(:last-of-type) {
                 margin-bottom: 16px;
             }
+
+            .home-card:last-of-type {
+                padding: 16px 24px;
+            }
+
             h1 {
                 font-size: 20px;
                 margin: 24px 0 0 24px;
             }
+
             h3 {
                 font-size: 16px;
                 color: #bdbdbd;
                 letter-spacing: 0.8px;
                 margin: 0 32px 16px;
             }
+
             p {
                 text-align: center;
                 line-height: 20px;
-                margin: 0 0 24px;
+                margin: 0 0 16px;
             }
+
             #pie-home-body {
+                position: relative;
+                top: -8px;
             }
+
             #top-section {
                 width: 100%;
                 opacity: 1;
                 color: white;
             }
+
             #quit-settings-trigger {
                 box-sizing: border-box;
                 padding: 16px 12px 6px 16px;
             }
+
             #premium-switch {
                 touch-action: manipulation;
             }
+
             .switch-container {
-                width: 48px;
-                margin: 12px 0;
+                width: 86px;
             }
 
             .switch {
@@ -66,26 +81,26 @@ class PieHome extends GestureEventListeners(PolymerElement) {
                 cursor: pointer;
                 outline: none;
                 user-select: none;
-                padding: 2px;
-                width: 48px;
-                height: 24px;
-                background-color: #B9BEC2;
+                width: 86px;
+                height: 62px;
+                background-color: transparent;
                 border-radius: 24px;
                 touch-action: manipulation;
+                box-sizing: border-box;
             }
 
             .switch+ label:before,
             .switch + label:after {
                 display: block;
                 position: absolute;
-                top: 1px;
-                left: 1px;
-                bottom: 1px;
+                top: 18px;
+                left: 32px;
+                bottom: 18px;
                 content: "";
             }
 
             .switch + label:before {
-                right: 1px;
+                right: 4px;
                 background-color: #9e9e9e;
                 border-radius: 24px;
                 transition: background 0.4s;
@@ -100,7 +115,7 @@ class PieHome extends GestureEventListeners(PolymerElement) {
             }
 
             .switch:checked + label:before {
-                background-color: #1b5e20;
+                background-color: #2e7d32;
             }
 
             .switch:checked + label:after {
@@ -115,34 +130,39 @@ class PieHome extends GestureEventListeners(PolymerElement) {
                 letter-spacing: 1.2px;
                 background: #1B1F23;
                 color: #B9BEC2;
+                padding: 12px 18px;
                 margin: 0 auto;
                 border: 1px solid rgba(255,255,255,0.5);
                 border-radius: 5px;
             }
+
             .level-label {
                 border-bottom: 1px solid rgba(255,255,255,0.3);
                 padding: 12px 0;
             }
+
             .level-bar:not(.selected) iron-icon {
                 display: none !important;
             }
+
             .level-selection-check-container {
                 width: 48px;
                 text-align: center;
             }
+
             #level-selector {
                 margin-bottom: 24px;
             }
+
             button#upgrade-btn {
-                padding: 12px 18px;
+                margin-bottom: 24px;
             }
-            button#cta {
-                padding: 12px 18px;
-            }
+
             iron-icon {
                 --iron-icon-width: 21px;
                 --iron-icon-height: 21px;
             }
+
             [hidden] {
                 display: none !important;
             }
@@ -181,15 +201,13 @@ class PieHome extends GestureEventListeners(PolymerElement) {
                         <div class="level-label flex">5 notes</div>
                     </div>
                 </div>
-                <button id="cta"
-                        type="button"
+                <button type="button"
                         data-game-start
                         on-down="restartGame">Start game</button>
             </div>
             <h3>Training</h3>
             <div class="home-card">
-                <button id="cta"
-                        type="button"
+                <button type="button"
                         data-warmup
                         on-down="restartGame">Start training</button>
             </div>
@@ -206,10 +224,10 @@ class PieHome extends GestureEventListeners(PolymerElement) {
                 </template>
                 <template is="dom-if" if="[[!premiumUser]]">
                     <div class="vertical layout center">
-                        <p>Play with the sound of a real piano</p>
-                        <button id="cta"
-                                    type="button"
-                                    on-down="openPurchaseDialog">Buy premium</button>
+                        <p>The sound of a real piano</p>
+                        <button id="upgrade-btn"
+                                type="button"
+                                on-down="openPurchaseDialog">Buy premium</button>
                     </div>
                 </template>
             </div>

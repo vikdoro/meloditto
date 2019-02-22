@@ -64,7 +64,7 @@ class PieApp extends GestureEventListeners(PolymerElement) {
             },
             premiumUser: {
                 type: Boolean,
-                value: true
+                value: false
             },
             premiumSound: {
                 type: Boolean,

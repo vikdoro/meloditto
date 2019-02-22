@@ -19,10 +19,6 @@ class PieGame extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
                 margin: 0 auto;
                 --cell-size: 88px;
             }
-            .colors {
-                background: #89A7A7;
-                background: #A23B72;
-            }
             #container {
                 height: 100%;
                 box-sizing: border-box;
@@ -32,12 +28,12 @@ class PieGame extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
                 opacity: 1;
                 width: 100vw;
                 max-width: 420px;
-                height: 120vw;
-                max-height: 504px;
+                height: 125vw;
+                max-height: 525px;
                 background: #13171B;
             }
             .cell-container {
-                padding: 18px 18px 12px;
+                padding: 16px;
             }
             #top-section {
                 width: 100%;
@@ -99,7 +95,7 @@ class PieGame extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
                 transform: scale(1);
             }
             .correct {
-                background: #1b5e20;
+                background: #2e7d32;
             }
             .sector:hover {
                 background: #009;
@@ -186,7 +182,16 @@ class PieGame extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
                 margin: 0;
                 border-radius: 3px;
             }
-            #tooltip-content #tooltip-text {
+            #dialog-content {
+                padding: 32px 40px;
+                background: #1B1F23;
+                margin: 0;
+                color: #bdbdbd;
+                text-align: center;
+                font-size: 16px;
+            }
+            #dialog-content .tooltip-text {
+                line-height: 24px;
             }
             #tooltip-content #tooltip-arrow {
                 position: absolute;
@@ -198,6 +203,19 @@ class PieGame extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
                 border-left: 9px solid transparent;
                 border-right: 9px solid transparent;
 
+            }
+            button {
+                display: block;
+                font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+                font-size: 12px;
+                text-transform: uppercase;
+                letter-spacing: 1.2px;
+                background: #1B1F23;
+                color: #B9BEC2;
+                padding: 12px 18px;
+                margin: 16px auto 0;
+                border: 1px solid rgba(255,255,255,0.5);
+                border-radius: 5px;
             }
             @keyframes tooltipFloat {
                 from { transform: translateY(0); }
@@ -310,6 +328,13 @@ class PieGame extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
                 <div id="tooltip-arrow"></div>
             </div>
         </paper-dialog>
+        <paper-dialog id="dialog" with-backdrop>
+            <div id="dialog-content">
+                <div class="tooltip-text">Game over!</div>
+                <div class="tooltip-text">Score: 420</div>
+                <button type="button" on-down="_restartGameFromDialog">Start again</button>
+            </div>
+        </paper-dialog>
         `;
     }
 
@@ -364,6 +389,10 @@ class PieGame extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
             firstPlayback: {
                 type: Boolean,
                 value: true
+            },
+            lives: {
+                type: Number,
+                value: 1
             }
         }
     }
@@ -373,7 +402,8 @@ class PieGame extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
     }
     connectedCallback() {
         super.connectedCallback();
-        //this.startTutorial();
+        this.startTutorial();
+        // this.$.dialog.open();
     }
     startTutorial() {
         this.openTooltip(this.$['play-button-container']);
@@ -445,6 +475,11 @@ class PieGame extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
             this.set('userSequence', []);
             this.progressIndex = -1;
             this.score = this.score - 10;
+            this.lives -= 1;
+            if (this.lives === 0) {
+                console.log('game over');
+                this.openTooltip(null);
+            }
         }
     }
     checkGame() {
@@ -494,13 +529,6 @@ class PieGame extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
         this.shadowRoot.querySelector('#play-button-container svg circle').setAttribute('stroke-dashoffset', 0);
     }
     togglePlayback() {
-        if (this.firstPlayback) {
-            this.userGestureHappened = true;
-            this.startPlaybackWithDelay();
-            this.init();
-            this.firstPlayback = false;
-            return;
-        }
         this.playback = !this.playback;
         // Playback button hit straight after winning
         this.resetPlaybackButtonStrokeOffset();
@@ -530,8 +558,10 @@ class PieGame extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
     }
     openTooltip(target) {
         const tooltip = this.$.tooltip;
-        const targetRect = target.getBoundingClientRect();
-        tooltip.positionTarget = target;
+        if (target) {
+            const targetRect = target.getBoundingClientRect();
+            tooltip.positionTarget = target;
+        }
         tooltip.open();
     }
     generateSequence() {
@@ -682,6 +712,11 @@ class PieGame extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
         this.set('scheduledNotes', tempArray);
         setTimeout(this.startPlayback.bind(this), 0);
     }
+    _restartGameFromDialog() {
+        this.$.dialog.close();
+        this.restartGame(this.gameLevel, this.warmupLevel);
+    }
+    // Public method
     restartGame(gameLevel, warmupLevel) {
         this.set('botSequence', []);
         this.set('userSequence', []);
