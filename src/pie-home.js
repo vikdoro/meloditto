@@ -11,16 +11,11 @@ class PieHome extends GestureEventListeners(PolymerElement) {
             :host {
                 display: block;
                 color: #9fa4a8;
-                background: #1B1F23;
+                background: #13171b;
             }
 
             .home-card {
-                background: #13171b;
                 padding: 24px;
-            }
-
-            .home-card:not(:last-of-type) {
-                margin-bottom: 16px;
             }
 
             .home-card:last-of-type {
@@ -33,10 +28,16 @@ class PieHome extends GestureEventListeners(PolymerElement) {
             }
 
             h3 {
+                background: #1B1F23;
                 font-size: 16px;
                 color: #bdbdbd;
                 letter-spacing: 0.8px;
-                margin: 0 32px 16px;
+                padding: 16px 32px;
+                margin: 0;
+            }
+
+            h3:first-of-type {
+                padding-top: 0;
             }
 
             p {
@@ -47,18 +48,16 @@ class PieHome extends GestureEventListeners(PolymerElement) {
 
             #pie-home-body {
                 position: relative;
-                top: -8px;
+                top: -18px;
             }
 
-            #top-section {
-                width: 100%;
-                opacity: 1;
-                color: white;
+            #home-top-bar {
+                background: #1B1F23;
             }
 
             #quit-settings-trigger {
                 box-sizing: border-box;
-                padding: 16px 12px 6px 16px;
+                padding: 16px;
             }
 
             #premium-switch {
@@ -224,7 +223,7 @@ class PieHome extends GestureEventListeners(PolymerElement) {
                 </template>
                 <template is="dom-if" if="[[!premiumUser]]">
                     <div class="vertical layout center">
-                        <p>The sound of a real piano</p>
+                        <p>Upgrade to real piano sound</p>
                         <button id="upgrade-btn"
                                 type="button"
                                 on-down="openPurchaseDialog">Buy premium</button>

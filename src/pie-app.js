@@ -14,9 +14,23 @@ class PieApp extends GestureEventListeners(PolymerElement) {
             :host {
                 display: block;
             }
-            #pager, #pager > *, #splash {
+            
+            #pager {
                 height: 100%;
             }
+
+            #splash {
+                height: 100%;
+            }
+
+            pie-game {
+                height: 100%;
+            }
+
+            pie-home {
+                min-height: 100%
+            }
+
             #splash {
                 background: #1B1F23;
             }

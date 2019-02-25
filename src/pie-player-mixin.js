@@ -72,10 +72,7 @@ let PiePlayerMixinInternal = (superClass) => {
             super.connectedCallback();
         }
         startPlayback() {
-            if (!window.context) {
-                this.init(this.startPlayback.bind(this));
-                return;
-            }
+            this.init(this.startPlayback.bind(this));
             clearTimeout(this.timerID);
             this.readyToStart = true;
             this.scheduledNotes = this.scheduledNotes.map(item => {
@@ -86,11 +83,19 @@ let PiePlayerMixinInternal = (superClass) => {
             this.draw();
         }
         init(cb) {
+            if (window.context && window.context.state === 'running') {
+                return;
+            }
             console.log('init yo');
             try {
                 window.AudioContext = window.AudioContext || window.webkitAudioContext;
                 if (!window.context) {
                     window.context = new AudioContext();
+                }
+                console.log('window.context.state', window.context.state)
+                if (window.context.state !== 'running') {
+                    console.log('context resumed');
+                    window.context.resume();
                 }
                 window.bufferLoader = new BufferLoader(
                     window.context,
@@ -108,10 +113,7 @@ let PiePlayerMixinInternal = (superClass) => {
             }
         }
         playSound(note, time=0) {
-            if (!window.context) {
-                this.init(this.playSound.bind(this, note, time));
-                return;
-            }
+            this.init(this.playSound.bind(this, note, time));
             return new Promise((resolve, reject) => {
                 this.source = window.context.createBufferSource();
                 this.source.buffer = window.bufferLoader.bufferList[note + this.sampleStartIndex];
