@@ -40,6 +40,9 @@ class PieGame extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
                 opacity: 1;
                 color: #9fa4a8;
             }
+            .top-section-content {
+                padding-left: 16px;
+            }
             #quit-game-trigger {
                 box-sizing: border-box;
                 padding: 16px;
@@ -48,10 +51,13 @@ class PieGame extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
                 --iron-icon-width: 20px;
                 --iron-icon-height: 20px;
             }
-            #point-counter {
+            #game-point-display, #warmup-level-display {
                 min-width: 40px;
                 font-size: 18px;
                 margin-left: 8px;
+            }
+            #warmup-level-display {
+                letter-spacing: 2px;
             }
             #note-bars {
                 width: 100%;
@@ -106,15 +112,6 @@ class PieGame extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
             }
             :host([reset]) .progress-section {
                 background: #c62828;
-            }
-            .color .note {
-                width: 33px;
-                height: 33px;
-                background: #EFE6DD;
-                position: relative;
-                top: 0;
-                right: 0px;
-                transform: scale(0.8);
             }
             #note-4 {
                 width: 40px;
@@ -224,9 +221,6 @@ class PieGame extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
                 --iron-icon-height: 18px;
                 margin-right: 2px;
             }
-            #life-count-container {
-                padding: 1px 0 0 16px;
-            }
             #life-container {
                 position: relative;
                 top: 0;
@@ -246,6 +240,9 @@ class PieGame extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
                 z-index: 10;
                 opacity: 0;
             }
+            .disable-pointer {
+                pointer-events: none;
+            }
             @keyframes tooltipFloat {
                 from { transform: translateY(0); }
                 to { transform: translateY(-6px); }
@@ -255,15 +252,20 @@ class PieGame extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
             }
         </style>
         <div id="container" class="vertical layout center">
-            <div id="top-section" class="horizontal layout justified">
-                <div class="flex horizontal layout center">
+            <div id="top-section" class="horizontal layout end-justified">
+                 <!-- Game display --> 
+                <div class="top-section-content flex horizontal layout center" hidden$="[[!gameMode]]">
                     <div id="life-count-container" class="horizontal layout">
                         <div id="life-container">
-                            <iron-icon class="life-icon" icon="pie-icons:life" hidden$="[[_isSmaller(liveCount, 1)]]"></iron-icon>
-                            <div id="life-overlay" style$="[[_computeLifeOverlayHeight(liveCount)]]"></div>
+                            <iron-icon class="life-icon" icon="pie-icons:life" hidden$="[[_isSmaller(lifeCount, 1)]]"></iron-icon>
+                            <div id="life-overlay" style$="[[_computeLifeOverlayHeight(lifeCount)]]"></div>
                         </div>
                     </div>
-                    <div id="point-counter" >[[score]]</div>
+                    <div id="game-point-display">[[score]]</div>
+                </div>
+                <!-- Warmup display --> 
+                <div class="top-section-content flex horizontal layout center" hidden$="[[gameMode]]">
+                    <div id="warmup-level-display">[[warmupDisplayLevel]]/5</div>
                 </div>
                 <div id="quit-game-trigger" on-down="quitGame">
                     <iron-icon icon="pie-icons:menu"></iron-icon>
@@ -277,7 +279,7 @@ class PieGame extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
                         <div class="cell key layout vertical center-center"
                              data-note="4"
                              on-down="hit">
-                            <div id="note-4"></div>
+                            <div id="note-4" class="note"></div>
                         </div>
                         <div class="cell"></div>
                         <div class="cell"></div>
@@ -291,7 +293,7 @@ class PieGame extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
                              style="position: relative; top: -18px; left: 0;"
                              data-note="3"
                              on-down="hit">
-                            <div id="note-3"></div>
+                            <div id="note-3" class="note"></div>
                         </div>
                         <div class="cell"></div>
                         <div class="cell"></div>
@@ -307,7 +309,7 @@ class PieGame extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
                              data-note="2"
                              on-down="hit"
                              hidden$="[[_isSmaller(revealIndex, 4)]]">
-                            <div id="note-2"></div>
+                            <div id="note-2" class="note"></div>
                         </div>
                     </div>
 
@@ -319,7 +321,7 @@ class PieGame extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
                              data-note="1"
                              on-down="hit"
                              hidden$="[[_isSmaller(revealIndex, 5)]]">
-                            <div id="note-1"></div>
+                            <div id="note-1" class="note"></div>
                         </div>
                         <div class="cell"></div>
                     </div>
@@ -331,7 +333,7 @@ class PieGame extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
                              data-note="0"
                              on-down="hit"
                              hidden$="[[_isSmaller(revealIndex, 3)]]">
-                            <div id="note-0"></div>
+                            <div id="note-0" class="note"></div>
                         </div>
                         <div class="cell"></div>
                         <div class="cell"></div>
@@ -359,18 +361,32 @@ class PieGame extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
                 </div>
             </div>
         </div>
-        <paper-dialog id="tooltip" vertical-align="top" horizontal-align="center" vertical-offset="-72">
+        <paper-dialog id="tooltip"
+                      vertical-align="top"
+                      horizontal-align="center"
+                      vertical-offset="-72"
+                      no-cancel-on-outside-click
+                      no-cancel-on-esc-key>
             <div id="tooltip-content">
-                <div id="tooltip-text">Yo soy tooltip</div>
+                <div id="tooltip-text">[[tutorialText]]</div>
                 <div id="tooltip-arrow"></div>
             </div>
         </paper-dialog>
         <paper-dialog id="dialog" on-iron-overlay-closed="_clearGame" with-backdrop>
             <div id="dialog-content">
                 <div class="tooltip-text">Game over!</div>
-                <div class="tooltip-text">Score: 420</div>
+                <div class="tooltip-text">Score: [[score]]</div>
                 <button type="button"
                         on-down="_restartGameFromDialog">Play again</button>
+            </div>
+        </paper-dialog>
+        <paper-dialog id="warmup-finished-dialog" on-iron-overlay-closed="_clearGame" with-backdrop>
+            <div id="dialog-content">
+                <div class="tooltip-text">Bravo!</div>
+                <div class="tooltip-text">You have mastered all notes.</div>
+                <button type="button"
+                        on-down="_restartGameFromDialog"
+                        data-redirect-to-game>Start a game</button>
             </div>
         </paper-dialog>
         `;
@@ -404,33 +420,41 @@ class PieGame extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
                 type: Number,
                 value: 0
             },
-            warmupIndex: {
+            warmupLevel: {
                 type: Number,
-                value: 0
-            },
-            hasStartedGame: {
-                type: Boolean,
-                value: false
+                value: 20
             },
             gameLevel: {
                 type: Number,
-                value: 5
+                value: 0
             },
             revealIndex: {
-                computed: 'computeRevealIndex(gameLevel, warmupIndex)'
+                computed: 'computeRevealIndex(gameLevel, warmupLevel)'
             },
             premiumSound: {
                 type: Boolean,
                 value: false,
                 observer: '_onPremiumSoundChanged'
             },
-            firstPlayback: {
-                type: Boolean,
-                value: true
-            },
-            liveCount: {
+            lifeCount: {
                 type: Number,
                 value: 3
+            },
+            gameMode: {
+                type: Boolean,
+                computed: '_isGameMode(gameLevel)'
+            },
+            warmupDisplayLevel: {
+                type: Number,
+                computed: '_computeWarmupDisplayLevel(warmupLevel)'
+            },
+            tutorialLevel: {
+                type: Number,
+                value: 1
+            },
+            tutorialText: {
+                type: String,
+                value: 'Click here to play a melody!'
             }
         }
     }
@@ -463,7 +487,6 @@ class PieGame extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
                 'assets/sounds/piano-5.wav',
             ]);
         }
-        console.log('changed handler');
         // Load the samples only if the audiocontext is ready and not before any user gesture
         if (window.context && window.context.state === 'running') {
             this.init();
@@ -477,6 +500,10 @@ class PieGame extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
         // No action if playback is ongoing, except if it's the last note
         if (this.playback && !this.lastBotNote) {
             return;
+        }
+
+        if (this.tutorialLevel > 0) {
+            this.proceedToNextTutorialStep();
         }
         
         // If it's the last note, turn off the playback to avoid the source
@@ -516,38 +543,48 @@ class PieGame extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
             this.set('userSequence', []);
             this.progressIndex = -1;
             this.score = this.score - 10;
-            this.liveCount -= 1;
-            if (this.liveCount === 0) {
-                console.log('game over');
-                setTimeout(() => this.$.dialog.open(), 1000);
+            if (this.gameMode) {
+                this.lifeCount -= 1;
+                if (this.lifeCount === 0) {
+                    console.log('game over');
+                    setTimeout(() => this.$.dialog.open(), 1000);
+                }
             }
         }
     }
+    /*
+    UI helper to compute the height of the overlay covering the heart symbol 
+    **/
     _computeLifeOverlayHeight() {
         let response;
-        if (this.liveCount === 3) {
+        if (this.lifeCount === 3) {
             response = 'opacity: 0;';
-        } else if (this.liveCount === 2) {
+        } else if (this.lifeCount === 2) {
             response = 'opacity: 0.33;';
         } else {
             response = 'opacity: 0.66;';
         }
         return response;
     }
-    checkGame() {
-        if (this.userSequence.length === this.botSequence.length) {
+    checkGame(force) {
+        if (force || this.userSequence.length === this.botSequence.length) {
             // Has won
             this.score = this.score + 20;
-            this.liveCount = 3;
+            this.lifeCount = 3;
+            // Finished warmup, exit gameflow
+            if (this.warmupLevel === 20) {
+                this.$['warmup-finished-dialog'].open();
+                return;
+            }
 
             // Warmup
-            if (this.warmupIndex > 0) {
+            if (this.warmupLevel > 0) {
                 // Finish warmup
-                if (this.warmupIndex === 16) {
-                    this.warmupIndex = 0;
+                if (this.warmupLevel === 16) {
+                    this.warmupLevel = 0;
                     // Increment warmup
                 } else {
-                    this.warmupIndex++;
+                    this.warmupLevel++;
                 }
             }
             // Clear round and start new with delay
@@ -560,16 +597,16 @@ class PieGame extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
             }, 850);
         }
     }
-    computeRevealIndex (gameLevel, warmupIndex) {
+    computeRevealIndex (gameLevel, warmupLevel) {
         let response;
-        if (this.warmupIndex) {
-            if (0 <= this.warmupIndex && this.warmupIndex < 3) {
+        if (this.warmupLevel) {
+            if (0 <= this.warmupLevel && this.warmupLevel < 3) {
                 response = 2; 
-            } else if (3 <= this.warmupIndex && this.warmupIndex < 8) {
+            } else if (3 <= this.warmupLevel && this.warmupLevel < 8) {
                 response = 3;
-            } else if (8 <= this.warmupIndex && this.warmupIndex < 14) {
+            } else if (8 <= this.warmupLevel && this.warmupLevel < 14) {
                 response = 4;
-            } else if (14 <= this.warmupIndex) {
+            } else if (14 <= this.warmupLevel) {
                 response = 5;
             }
         } else if (this.gameLevel) {
@@ -583,6 +620,11 @@ class PieGame extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
     }
     togglePlayback() {
         this.playback = !this.playback;
+
+        if (this.tutorialLevel > 0) {
+            this.proceedToNextTutorialStep();
+        }
+        
         // Playback button hit straight after winning
         this.resetPlaybackButtonStrokeOffset();
         if (!this.playback) {
@@ -597,6 +639,7 @@ class PieGame extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
         this.playBotSequence();
     }
     quitGame() {
+        this.resetPlaybackButtonStrokeOffset();
         this.dispatchEvent(
             new CustomEvent('quit-game-request', {
                 bubbles: true,
@@ -611,6 +654,7 @@ class PieGame extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
             tooltip.positionTarget = target;
         }
         tooltip.open();
+        tooltip.notifyResize();
     }
     generateSequence() {
         let botSequenceCandidate;
@@ -622,8 +666,9 @@ class PieGame extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
     doGenerateSequence() {
         const pitchArray = this._getPitchArray();
         const numberOfNotes = this._getNumberOfNotes();
-        const forcedWarmupSequence = (this.warmupIndex > 0 && this.warmupIndex < 5) ||
-            this.warmupIndex === 8 || this.warmupIndex === 9 || this.warmupIndex === 14 || this.warmupIndex === 15;
+        const warmupLevel = this.warmupLevel;
+        const forcedWarmupSequence = (warmupLevel > 0 && warmupLevel < 5) ||
+            warmupLevel === 8 || warmupLevel === 9 || (warmupLevel >= 14 && warmupLevel < 21);
         let sequence = [];
         do {
             for (let i = 0; i < numberOfNotes; i++) {
@@ -636,7 +681,7 @@ class PieGame extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
                 let indexesToTransform = [];
                 sequence.forEach((item, index) => {
                     // 65% times don't transform to quavers or only once if it's warmup
-                    if (Math.random() <= 0.65 || (this.warmupIndex > 0 && indexesToTransform.length > 0 )) {
+                    if (Math.random() <= 0.65 || (warmupLevel > 0 && indexesToTransform.length > 0 )) {
                         return;
                     }
                     indexesToTransform.push(index);
@@ -651,7 +696,7 @@ class PieGame extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
                 }
             // Forced warmup sequence
             } else {
-                switch (this.warmupIndex) {
+                switch (warmupLevel) {
                     case 1:
                         sequence = [{ noteIndex: 3, length: 4 }, { noteIndex: 4, length: 4 }];
                         break;
@@ -704,7 +749,7 @@ class PieGame extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
     **/
     _getNumberOfNotes() {
         let response;
-        let index = this.warmupIndex;
+        let index = this.warmupLevel;
         if (index) {
             if ((1 <= index && index < 3) || (index === 8 || index === 14)) {
                 response = 2;
@@ -714,7 +759,7 @@ class PieGame extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
         } else {
             response = Math.floor(Math.random() * 3) + 2;
         }
-        return response;
+        return 2;
     }
     _getPitchArray() {
         const levelMap = {
@@ -726,13 +771,13 @@ class PieGame extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
             return levelMap[this.gameLevel];
         }
         let response;
-        let index = this.warmupIndex;
-        if (index) {
-            if (1 <= index && index < 3) {
+        let warmupLevel = this.warmupLevel;
+        if (warmupLevel) {
+            if (1 <= warmupLevel && warmupLevel < 3) {
                 response = [3, 4];
-            } else if (3 <= index && index < 8) {
+            } else if (3 <= warmupLevel && warmupLevel < 8) {
                 response = [3, 4, 0];
-            } else if (8 <= index && index < 14) {
+            } else if (8 <= warmupLevel && warmupLevel < 14) {
                 response = [3, 4, 0, 2];
             } else {
                 response = [3, 4, 0, 2, 1];
@@ -741,6 +786,46 @@ class PieGame extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
             response = [3, 4, 0, 2, 1];;
         }
         return response;
+    }
+    proceedToNextTutorialStep() {
+        this.tutorialLevel += 1;
+        const noteElements = [...this.shadowRoot.querySelectorAll('.note')];
+        switch (this.tutorialLevel) {
+            case 1:
+                this.tutorialText = 'Click here to play a melody!';
+                break;
+            case 2:
+                this.$.tooltip.close();
+                break;
+            case 3:
+                this.tutorialText = 'now this';
+                noteElements.forEach(note => {
+                    if (note.id !== 'note-0') {
+                        note.parentElement.classList.add('disable-pointer');
+                    }
+                });
+                this.openTooltip(this.$['note-0']);
+                break;
+            case 4:
+            noteElements.forEach(note => {
+                note.parentElement.classList.remove('disable-pointer');
+            });
+                this.$.tooltip.close();
+                break;
+            case 5:
+                this.tutorialText = 'now this';
+                this.openTooltip(this.$['note-0']);
+                break;
+            case 9:
+                sequence[0] = { noteIndex: 2, length: 4 };
+                break;
+            case 14:
+                sequence[sequence.length - 1] = { noteIndex: 1, length: 4 };
+                break;
+            case 15:
+                sequence[0] = { noteIndex: 1, length: 4 };
+                break;
+        }
     }
     arraysDiffer(arr1, arr2) {
         return arr1.length !== arr2.length || arr1.filter((item, index) => item !== arr2[index]).length > 0;
@@ -760,9 +845,15 @@ class PieGame extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
         this.set('scheduledNotes', tempArray);
         setTimeout(this.startPlayback.bind(this), 0);
     }
-    _restartGameFromDialog() {
-        this.$.dialog.close();
-        this.restartGame(this.gameLevel, this.warmupLevel);
+    _restartGameFromDialog(e) {
+        if (e.currentTarget.hasAttribute('data-redirect-to-game')) {
+            this.gameLevel = 5;
+            this.warmupLevel = 0;
+            this.$['warmup-finished-dialog'].close();
+        } else {
+            this.$.dialog.close();
+        }
+        this.startGame(this.gameLevel, this.warmupLevel);
     }
     _clearGame() {
         this.set('botSequence', []);
@@ -770,14 +861,18 @@ class PieGame extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
         this.progressIndex = -1;
         this.playbackIndex = -1;
         this.score = 0;
-        this.liveCount = 3;
+        this.lifeCount = 3;
     }
     // Public method
-    restartGame(gameLevel, warmupLevel) {
+    startGame(gameLevel, warmupLevel) {
         this._clearGame();
-        this.warmupIndex = warmupLevel;
-        this.gameLevel = gameLevel;
+        this.gameLevel = gameLevel || 0;
+        this.warmupLevel = warmupLevel || 0;
         setTimeout(this.startPlaybackWithDelay.bind(this), 0);
+    }
+    _computeWarmupDisplayLevel(warmupLevel) {
+        const pitchArray = this._getPitchArray();
+        return pitchArray.length;
     }
     _computeProgressClass(item, itemIndex, progressIndex, playbackIndex) {
         let classString = 'progress-section';
@@ -799,11 +894,13 @@ class PieGame extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
         this.shadowRoot.querySelector('#play-button-container svg circle').setAttribute('stroke-dashoffset', 252);
     }
     onPlayButtonAnimationEnd() {
-        console.log('ss')
         this.togglePlayback();
     }
     _isSmaller(compared, base) {
         return compared < base;
+    }
+    _isGameMode(gameLevel) {
+        return gameLevel > 0;
     }
 }
 customElements.define(PieGame.is, PieGame);

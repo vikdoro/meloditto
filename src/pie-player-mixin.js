@@ -57,10 +57,6 @@ let PiePlayerMixinInternal = (superClass) => {
                     type: Array,
                     value: () => []
                 },
-                playbackReadyToStart: {
-                    type: Boolean,
-                    value: true
-                },
                 sampleStartIndex: {
                     type: Number,
                     value: 0
@@ -74,7 +70,6 @@ let PiePlayerMixinInternal = (superClass) => {
         startPlayback() {
             this.init(this.startPlayback.bind(this));
             clearTimeout(this.timerID);
-            this.readyToStart = true;
             this.scheduledNotes = this.scheduledNotes.map(item => {
                 item.time = item.time + window.context.currentTime;
                 return item;
@@ -86,15 +81,12 @@ let PiePlayerMixinInternal = (superClass) => {
             if (window.context && window.context.state === 'running') {
                 return;
             }
-            console.log('init yo');
             try {
                 window.AudioContext = window.AudioContext || window.webkitAudioContext;
                 if (!window.context) {
                     window.context = new AudioContext();
                 }
-                console.log('window.context.state', window.context.state)
                 if (window.context.state !== 'running') {
-                    console.log('context resumed');
                     window.context.resume();
                 }
                 window.bufferLoader = new BufferLoader(
@@ -131,7 +123,6 @@ let PiePlayerMixinInternal = (superClass) => {
         onPlaybackChanged(newValue, oldValue) {
             // Stop audio
             if (oldValue && !newValue) {
-                this.readyToStart = false;
                 for (var i = 0; i < this.sources.length; i++) {
                     if (this.sources[i].connected) {
                         this.sources[i].disconnect(window.context.destination);
@@ -147,6 +138,10 @@ let PiePlayerMixinInternal = (superClass) => {
                 // If playback hasn't completed at least once, reset the playbackIndex
                 if (this.playbackIndex < this.scheduledNotes.length - 1) {
                     this.playbackIndex = -1;
+                }
+                // Make this mixin a non-UI component as a child to pie-game
+                if (this.tutorialLevel) {
+                    this.proceedToNextTutorialStep();
                 }
             }
         }

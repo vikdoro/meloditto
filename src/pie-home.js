@@ -202,13 +202,13 @@ class PieHome extends GestureEventListeners(PolymerElement) {
                 </div>
                 <button type="button"
                         data-game-start
-                        on-down="restartGame">Start game</button>
+                        on-down="startGame">Start game</button>
             </div>
             <h3>Training</h3>
             <div class="home-card">
                 <button type="button"
                         data-warmup
-                        on-down="restartGame">Start training</button>
+                        on-down="startGame">Start training</button>
             </div>
             <h3>Premium</h3>
             <div class="home-card"> 
@@ -246,7 +246,7 @@ class PieHome extends GestureEventListeners(PolymerElement) {
             },
             gameLevel: {
                 type: Number,
-                value: 0
+                value: 5
             }
         }
     }
@@ -301,7 +301,7 @@ class PieHome extends GestureEventListeners(PolymerElement) {
         this.shadowRoot.querySelector('#premium-switch').checked = !this.shadowRoot.querySelector('#premium-switch').checked;
         console.log('switch premium');
     }
-    restartGame(e) {
+    startGame(e) {
         const gameLevel = e.currentTarget.getAttribute('data-game-start') !== null ?
              this.gameLevel : 0;
         const warmupLevel = e.currentTarget.getAttribute('data-warmup') !== null ? 1 : 0;

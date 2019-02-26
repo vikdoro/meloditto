@@ -58,7 +58,7 @@ class PieApp extends GestureEventListeners(PolymerElement) {
             <pie-home id="pie-home"
                       data-route="home"
                       on-quit-settings-request="navigateToGame"
-                      on-restart-game-request="proceedToRestartGame"
+                      on-restart-game-request="proceedToStartGame"
                       premium-user="[[premiumUser]]"
                       premium-sound="{{premiumSound}}"></pie-home>
             <pie-game id="pie-game"
@@ -103,11 +103,11 @@ class PieApp extends GestureEventListeners(PolymerElement) {
         this.$['pie-game'].init();
         this.$['pie-game'].togglePlayback();
     }
-    proceedToRestartGame(e) {
+    proceedToStartGame(e) {
         this.section = 'game';
         const gameLevel = e.detail.gameLevel;
         const warmupLevel = e.detail.warmupLevel;
-        this.$['pie-game'].restartGame(gameLevel, warmupLevel);
+        this.$['pie-game'].startGame(gameLevel, warmupLevel);
     }
 }
 customElements.define(PieApp.is, PieApp);
