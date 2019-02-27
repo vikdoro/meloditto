@@ -18,6 +18,7 @@ let PiePlayerMixinInternal = (superClass) => {
                 playback: {
                     type: Boolean,
                     value: false,
+                    notify: true,
                     observer: 'onPlaybackChanged'
                 },
                 sources: {
@@ -138,10 +139,6 @@ let PiePlayerMixinInternal = (superClass) => {
                 // If playback hasn't completed at least once, reset the playbackIndex
                 if (this.playbackIndex < this.scheduledNotes.length - 1) {
                     this.playbackIndex = -1;
-                }
-                // Make this mixin a non-UI component as a child to pie-game
-                if (this.tutorialLevel) {
-                    this.proceedToNextTutorialStep();
                 }
             }
         }

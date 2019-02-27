@@ -5,6 +5,7 @@ import './pie-icons.js';
 import './play-button.js';
 import { PiePlayerMixin } from './pie-player-mixin.js';
 import { GestureEventListeners } from '@polymer/polymer/lib/mixins/gesture-event-listeners.js';
+import Tutorial from './tutorial.js';
 
 class PieGame extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
     static get template() {
@@ -180,6 +181,9 @@ class PieGame extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
                 margin: 0;
                 border-radius: 3px;
             }
+            #tooltip-text {
+                text-align: center;
+            }
             #dialog-content {
                 padding: 32px 40px;
                 background: #1B1F23;
@@ -289,7 +293,8 @@ class PieGame extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
                     <div class="row horizontal layout">
                         <div class="cell"></div>
                         <div class="cell"></div>
-                        <div class="cell key layout vertical center-center"
+                        <div id="note-3-container"
+                             class="cell key layout vertical center-center"
                              style="position: relative; top: -18px; left: 0;"
                              data-note="3"
                              on-down="hit">
@@ -329,7 +334,8 @@ class PieGame extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
                     <div class="row horizontal layout">
                         <div class="cell"></div>
                         <div class="cell"></div>
-                        <div class="cell key layout vertical center-center"
+                        <div id="note-0-container"
+                             class="cell key layout vertical center-center"
                              data-note="0"
                              on-down="hit"
                              hidden$="[[_isSmaller(revealIndex, 3)]]">
@@ -342,7 +348,7 @@ class PieGame extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
 
                 <div id="note-bars" class="horizontal layout">
                     <template is="dom-repeat" items="[[botSequence]]">
-                        <div class$="[[_computeProgressClass(item, index, progressIndex, playbackIndex)]]"></div>
+                        <div class$="[[_computeProgressClass(item, index, userProgress, playbackIndex)]]"></div>
                     </template>
                 </div>
             </div>
@@ -357,7 +363,7 @@ class PieGame extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
                                 stroke-dashoffset="252"
                                 on-transitionend="onPlayButtonAnimationEnd"/>
                     </svg>
-                    <play-button on-down="togglePlayback" playback="[[playback]]"></play-button>
+                    <play-button id="play-button" on-down="togglePlayback" playback="[[playback]]"></play-button>
                 </div>
             </div>
         </div>
@@ -368,7 +374,7 @@ class PieGame extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
                       no-cancel-on-outside-click
                       no-cancel-on-esc-key>
             <div id="tooltip-content">
-                <div id="tooltip-text">[[tutorialText]]</div>
+                <div id="tooltip-text"></div>
                 <div id="tooltip-arrow"></div>
             </div>
         </paper-dialog>
@@ -399,11 +405,7 @@ class PieGame extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
                 type: Array,
                 value: () => []
             },
-            userSequence: {
-                type: Array,
-                value: () => []
-            },
-            progressIndex: {
+            userProgress: {
                 type: Number,
                 value: -1
             },
@@ -448,14 +450,6 @@ class PieGame extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
                 type: Number,
                 computed: '_computeWarmupDisplayLevel(warmupLevel)'
             },
-            tutorialLevel: {
-                type: Number,
-                value: 1
-            },
-            tutorialText: {
-                type: String,
-                value: 'Click here to play a melody!'
-            }
         }
     }
     constructor() {
@@ -464,10 +458,42 @@ class PieGame extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
     }
     connectedCallback() {
         super.connectedCallback();
-        this.startTutorial();
-    }
-    startTutorial() {
-        this.openTooltip(this.$['play-button-container']);
+        // this.startTutorial();
+        this.tutorial = new Tutorial(this.$.tooltip, this.$['tooltip-text'], this.$['tooltip-arrow'], this);
+        this.tutorial = null;
+        this.addEventListener('tutorial-finished', () => {
+            console.log('tutorial done');
+        })
+        // this.tutorial.stepList = [
+        //     {
+        //         userTarget: this.$['play-button'],
+        //         tooltipText: 'Tap here to play a melody.',
+        //         tooltipTarget: this.$['play-button']
+        //     },
+        //     {
+        //         appEvent: 'playback-changed'
+        //     },
+        //     {
+        //         userTarget: this.$['note-0-container'],
+        //         tooltipTarget: this.$['note-0-container'],
+        //         tooltipText: 'OK, there were two notes.<br> Can this be the first?'
+        //     },
+        //     {
+        //         tooltipTarget: this.$['note-0'],
+        //         tooltipText: 'Yay, that\'s right!',
+        //         duration: 1500
+        //     },
+        //     {
+        //         userTarget: this.$['note-3-container'],
+        //         tooltipTarget: this.$['note-3'],
+        //         tooltipText: 'This the second?'
+        //     },
+        //     {
+        //         tooltipTarget: this.$['note-3'],
+        //         tooltipText: 'Brilliant. Ready to go, Maestro!',
+        //         duration: 2500
+        //     },
+        // ];
     }
     _onPremiumSoundChanged(premium) {
         if (premium) {
@@ -495,17 +521,16 @@ class PieGame extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
     }
     hit(e) {
         e.stopPropagation();
+        if (this.tutorial && tutorial.active && this.tutorial.activeTarget !== e.currentTarget) {
+            return;
+        }
+        e.currentTarget.dispatchEvent(new Event('tutorial-tap'));
         const noteIndex = parseInt(e.currentTarget.getAttribute('data-note'));
 
         // No action if playback is ongoing, except if it's the last note
         if (this.playback && !this.lastBotNote) {
             return;
         }
-
-        if (this.tutorialLevel > 0) {
-            this.proceedToNextTutorialStep();
-        }
-        
         // If it's the last note, turn off the playback to avoid the source
         // being disconnected later
         if (this.lastBotNote) {
@@ -528,20 +553,20 @@ class PieGame extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
         if (!this.botSequence || this.botSequence.length === 0) {
             return;
         }
-        const currentNoteIndex = this.userSequence.length;
+
+        const currentNoteIndex = this.userProgress + 1;
+        console.log('current note index', currentNoteIndex);
 
         // Right guess
         if (this.botSequence[currentNoteIndex].noteIndex === note) {
-            this.push('userSequence', note);
-            this.progressIndex = this.progressIndex + 1;
+            this.userProgress = this.userProgress + 1;
             this.checkGame();
             this.score = this.score + 10;
         // Wrong guess
         } else {
             this.reset = true;
             setTimeout(() => this.reset = false, 1200);
-            this.set('userSequence', []);
-            this.progressIndex = -1;
+            this.userProgress = -1;
             this.score = this.score - 10;
             if (this.gameMode) {
                 this.lifeCount -= 1;
@@ -567,7 +592,7 @@ class PieGame extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
         return response;
     }
     checkGame(force) {
-        if (force || this.userSequence.length === this.botSequence.length) {
+        if (force || this.userProgress === this.botSequence.length - 1) {
             // Has won
             this.score = this.score + 20;
             this.lifeCount = 3;
@@ -590,7 +615,7 @@ class PieGame extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
             // Clear round and start new with delay
             setTimeout(() => {
                 this.set('botSequence', []);
-                this.progressIndex = -1;
+                this.userProgress = -1;
             }, 850);
             setTimeout(() => {
                 this.startPlaybackWithDelay();
@@ -618,20 +643,20 @@ class PieGame extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
         this.shadowRoot.querySelector('#play-button-container svg circle').style.transition = 'stroke-dashoffset 1500ms cubic-bezier(0.2, 0.2, 0.7, 0.8)';
         this.shadowRoot.querySelector('#play-button-container svg circle').setAttribute('stroke-dashoffset', 0);
     }
-    togglePlayback() {
-        this.playback = !this.playback;
-
-        if (this.tutorialLevel > 0) {
-            this.proceedToNextTutorialStep();
+    togglePlayback(e) {
+        if (this.tutorial && this.tutorial.active && this.tutorial.activeTarget !== e.currentTarget) {
+            return;
         }
+        this.playback = !this.playback;
+        e.currentTarget.dispatchEvent(new Event('tutorial-tap'));
         
         // Playback button hit straight after winning
         this.resetPlaybackButtonStrokeOffset();
         if (!this.playback) {
             return;
         }
-        this.set('userSequence', []);
-        this.progressIndex = -1;
+        // Reset the guessed notes
+        this.userProgress = -1;
         if (this.botSequence.length === 0) {
             this.playbackIndex = -1;
             this.generateSequence();
@@ -639,6 +664,9 @@ class PieGame extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
         this.playBotSequence();
     }
     quitGame() {
+        if (this.tutorial && this.tutorial.active) {
+            return;
+        }
         this.resetPlaybackButtonStrokeOffset();
         this.dispatchEvent(
             new CustomEvent('quit-game-request', {
@@ -646,15 +674,6 @@ class PieGame extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
                 composed: true
             })
         );
-    }
-    openTooltip(target) {
-        const tooltip = this.$.tooltip;
-        if (target) {
-            const targetRect = target.getBoundingClientRect();
-            tooltip.positionTarget = target;
-        }
-        tooltip.open();
-        tooltip.notifyResize();
     }
     generateSequence() {
         let botSequenceCandidate;
@@ -787,46 +806,6 @@ class PieGame extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
         }
         return response;
     }
-    proceedToNextTutorialStep() {
-        this.tutorialLevel += 1;
-        const noteElements = [...this.shadowRoot.querySelectorAll('.note')];
-        switch (this.tutorialLevel) {
-            case 1:
-                this.tutorialText = 'Click here to play a melody!';
-                break;
-            case 2:
-                this.$.tooltip.close();
-                break;
-            case 3:
-                this.tutorialText = 'now this';
-                noteElements.forEach(note => {
-                    if (note.id !== 'note-0') {
-                        note.parentElement.classList.add('disable-pointer');
-                    }
-                });
-                this.openTooltip(this.$['note-0']);
-                break;
-            case 4:
-            noteElements.forEach(note => {
-                note.parentElement.classList.remove('disable-pointer');
-            });
-                this.$.tooltip.close();
-                break;
-            case 5:
-                this.tutorialText = 'now this';
-                this.openTooltip(this.$['note-0']);
-                break;
-            case 9:
-                sequence[0] = { noteIndex: 2, length: 4 };
-                break;
-            case 14:
-                sequence[sequence.length - 1] = { noteIndex: 1, length: 4 };
-                break;
-            case 15:
-                sequence[0] = { noteIndex: 1, length: 4 };
-                break;
-        }
-    }
     arraysDiffer(arr1, arr2) {
         return arr1.length !== arr2.length || arr1.filter((item, index) => item !== arr2[index]).length > 0;
     }
@@ -857,8 +836,7 @@ class PieGame extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
     }
     _clearGame() {
         this.set('botSequence', []);
-        this.set('userSequence', []);
-        this.progressIndex = -1;
+        this.userProgress = -1;
         this.playbackIndex = -1;
         this.score = 0;
         this.lifeCount = 3;
@@ -874,7 +852,7 @@ class PieGame extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
         const pitchArray = this._getPitchArray();
         return pitchArray.length;
     }
-    _computeProgressClass(item, itemIndex, progressIndex, playbackIndex) {
+    _computeProgressClass(item, itemIndex, userProgress, playbackIndex) {
         let classString = 'progress-section';
         if (item.length === 2) {
             classString += ' flex';
@@ -884,7 +862,7 @@ class PieGame extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
         if (itemIndex > playbackIndex) {
             classString += ' concealed';
         }
-        if (itemIndex <= progressIndex) {
+        if (itemIndex <= userProgress) {
             classString += ' correct';
         }
         return classString;
