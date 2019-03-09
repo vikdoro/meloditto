@@ -256,9 +256,6 @@ class PieHome extends GestureEventListeners(PolymerElement) {
     connectedCallback() {
         super.connectedCallback();
     }
-    onPremiumSoundChange(e) {
-        this.premiumSound = e.currentTarget.checked;
-    }
     purchaseConfirmed() {
         console.log('dismissed');
         store.order('melowise1')
@@ -298,8 +295,8 @@ class PieHome extends GestureEventListeners(PolymerElement) {
     }
     switchPremiumSound(e) {
         e.preventDefault();
-        this.shadowRoot.querySelector('#premium-switch').checked = !this.shadowRoot.querySelector('#premium-switch').checked;
-        console.log('switch premium');
+        const newValue = !this.shadowRoot.querySelector('#premium-switch').checked;
+        this.shadowRoot.querySelector('#premium-switch').checked = this.premiumSound = newValue;
     }
     startGame(e) {
         const gameLevel = e.currentTarget.getAttribute('data-game-start') !== null ?

@@ -498,19 +498,19 @@ class PieGame extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
     _onPremiumSoundChanged(premium) {
         if (premium) {
             this.sampleList = ([
-                'assets/sounds/ppiano-1.wav',
-                'assets/sounds/ppiano-2.wav',
-                'assets/sounds/ppiano-3.wav',
-                'assets/sounds/ppiano-4.wav',
-                'assets/sounds/ppiano-5.wav',
+                'assets/sounds/ppiano-1.mp3',
+                'assets/sounds/ppiano-2.mp3',
+                'assets/sounds/ppiano-3.mp3',
+                'assets/sounds/ppiano-4.mp3',
+                'assets/sounds/ppiano-5.mp3',
             ]);
         } else {
             this.sampleList = ([
-                'assets/sounds/piano-1.wav',
-                'assets/sounds/piano-2.wav',
-                'assets/sounds/piano-3.wav',
-                'assets/sounds/piano-4.wav',
-                'assets/sounds/piano-5.wav',
+                'assets/sounds/piano-1.mp3',
+                'assets/sounds/piano-2.mp3',
+                'assets/sounds/piano-3.mp3',
+                'assets/sounds/piano-4.mp3',
+                'assets/sounds/piano-5.mp3',
             ]);
         }
         // Load the samples only if the audiocontext is ready and not before any user gesture
@@ -602,6 +602,9 @@ class PieGame extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
                 return;
             }
 
+            // if (this.warmup.active) {
+            //     this.warmup.switchUp();
+            // }
             // Warmup
             if (this.warmupLevel > 0) {
                 // Finish warmup
@@ -644,11 +647,11 @@ class PieGame extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
         this.shadowRoot.querySelector('#play-button-container svg circle').setAttribute('stroke-dashoffset', 0);
     }
     togglePlayback(e) {
-        if (this.tutorial && this.tutorial.active && this.tutorial.activeTarget !== e.currentTarget) {
+        if (this.tutorial && this.tutorial.active && this.tutorial.activeTarget !== this.$['play-button']) {
             return;
         }
         this.playback = !this.playback;
-        e.currentTarget.dispatchEvent(new Event('tutorial-tap'));
+        this.$['play-button'].dispatchEvent(new Event('tutorial-tap'));
         
         // Playback button hit straight after winning
         this.resetPlaybackButtonStrokeOffset();
@@ -778,7 +781,7 @@ class PieGame extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
         } else {
             response = Math.floor(Math.random() * 3) + 2;
         }
-        return 2;
+        return response;
     }
     _getPitchArray() {
         const levelMap = {
