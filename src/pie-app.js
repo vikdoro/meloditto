@@ -13,13 +13,10 @@ class PieApp extends GestureEventListeners(PolymerElement) {
         <style is="custom-style" include="iron-flex iron-flex-alignment iron-flex-factors">
             :host {
                 display: block;
+                background: #1B1F23;
             }
             
             #pager {
-                height: 100%;
-            }
-
-            #splash {
                 height: 100%;
             }
 
@@ -28,12 +25,9 @@ class PieApp extends GestureEventListeners(PolymerElement) {
             }
 
             pie-home {
-                min-height: 100%
+                min-height: 100%;
             }
 
-            #splash {
-                background: #1B1F23;
-            }
             button {
                 display: block;
                 font-family: -apple-system, BlinkMacSystemFont, sans-serif;
@@ -52,19 +46,13 @@ class PieApp extends GestureEventListeners(PolymerElement) {
             }
         </style>
         <iron-pages id="pager" attr-for-selected="data-route" selected="[[section]]">
-            <div id="splash" class="vertical layout center-center" data-route="splash">
-                <button type="button" on-down="startGame">Start Game</button>
-            </div>
             <pie-home id="pie-home"
                       data-route="home"
                       on-quit-settings-request="navigateToGame"
-                      on-restart-game-request="proceedToStartGame"
-                      premium-user="[[premiumUser]]"
-                      premium-sound="{{premiumSound}}"></pie-home>
+                      on-restart-game-request="proceedToStartGame"></pie-home>
             <pie-game id="pie-game"
                       data-route="game"
-                      premium-sound="[[premiumSound]]"
-                      on-quit-game-request="navigateToHome"></pie-game>
+                      on-exit-game-request="navigateToHome"></pie-game>
         </iron-pages>
         `;
     }
@@ -76,38 +64,40 @@ class PieApp extends GestureEventListeners(PolymerElement) {
                 type: String,
                 value: 'game'
             },
-            premiumUser: {
+            isAttached: {
                 type: Boolean,
-                value: false
-            },
-            premiumSound: {
-                type: Boolean,
-                value: false
+                notify: true
             }
         }
     }
-    constructor() {
-        super();
-    }
+
     connectedCallback() {
         super.connectedCallback();
+        this.isAttached = true;
     }
+
+    getGameComponent() {
+        return this.$['pie-game'];
+    }
+
     navigateToHome() {
         this.section = 'home';
     }
+
     navigateToGame() {
         this.section = 'game';
     }
+
     startGame () {
         this.section = 'game';
         this.$['pie-game'].init();
-        this.$['pie-game'].togglePlayback();
     }
+
     proceedToStartGame(e) {
-        this.section = 'game';
         const gameLevel = e.detail.gameLevel;
         const warmupLevel = e.detail.warmupLevel;
-        this.$['pie-game'].startGame(gameLevel, warmupLevel);
+        this.section = 'game';
+        this.$['pie-game'].startFlow(gameLevel, warmupLevel);
     }
 }
 customElements.define(PieApp.is, PieApp);

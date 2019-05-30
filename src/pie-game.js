@@ -5,7 +5,7 @@ import './pie-icons.js';
 import './play-button.js';
 import { PiePlayerMixin } from './pie-player-mixin.js';
 import { GestureEventListeners } from '@polymer/polymer/lib/mixins/gesture-event-listeners.js';
-import Tutorial from './tutorial.js';
+import Warmup from './warmup.js';
 
 class PieGame extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
     static get template() {
@@ -13,18 +13,19 @@ class PieGame extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
         <style is="custom-style" include="iron-flex iron-flex-alignment iron-flex-factors">
             :host {
                 display: block;
-                max-width: 648px;
                 max-height: 100vh;
                 overflow: hidden;
                 background: #1B1F23;
                 margin: 0 auto;
                 --cell-size: 88px;
             }
+
             #container {
                 height: 100%;
                 box-sizing: border-box;
             }
-            .wrapper {
+
+            #game-field {
                 position: relative;
                 opacity: 1;
                 width: 100vw;
@@ -33,33 +34,49 @@ class PieGame extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
                 max-height: 525px;
                 background: #13171B;
             }
+
             .cell-container {
                 padding: 16px;
             }
+
             #top-section {
                 width: 100%;
                 opacity: 1;
                 color: #9fa4a8;
             }
+
             .top-section-content {
                 padding-left: 16px;
             }
-            #quit-game-trigger {
+
+            #exit-game-trigger {
                 box-sizing: border-box;
                 padding: 16px;
             }
+
             iron-icon {
-                --iron-icon-width: 20px;
-                --iron-icon-height: 20px;
+                --iron-icon-width: 24px;
+                --iron-icon-height: 24px;
             }
+
             #game-point-display, #warmup-level-display {
                 min-width: 40px;
                 font-size: 18px;
                 margin-left: 8px;
             }
+
             #warmup-level-display {
                 letter-spacing: 2px;
             }
+
+            .warmup-icon {
+                height: 14px;
+                width: 14px;
+                border-radius: 50%;
+                background: #9fa4a8;
+                margin-right: 4px;
+            }
+
             #note-bars {
                 width: 100%;
                 height: 12px;
@@ -69,14 +86,17 @@ class PieGame extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
                 padding: 0 1px;
                 margin: 4px 0;
             }
+
             .progress-section {
                 background: slategray;
                 border-radius: 24px;
                 margin-left: 2px;
             }
+
             .progress-section:first-child {
                 margin-left: 0;
             }
+
             play-button {
                 width: 60px;
                 height: 60px;
@@ -86,6 +106,7 @@ class PieGame extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
                 left: 10px;
                 transform: translateZ(0);
             }
+
             .cell {
                 height: 100%;
                 width: 50px;
@@ -94,38 +115,47 @@ class PieGame extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
                 display: flex;
                 align-items: center;
                 justify-content: center;
-            }           
+            }
+  
             .key {
                 background: transparent;
                 opacity: 1;
             }
+
             .key.hit {
                 transform: scale(1);
             }
+
             .correct {
                 background: #2e7d32;
             }
+
             .sector:hover {
                 background: #009;
             }
+
             .row {
                 flex: 1;
             }
-            :host([reset]) .progress-section {
+
+            :host([wrong-note-feedback]) .progress-section {
                 background: #c62828;
             }
+
             #note-4 {
                 width: 40px;
                 height: 40px;
                 background: #F3DFA2;
                 border-radius: 50%;
             }
+
             #note-3 {
                 width: 40px;
                 height: 40px;
                 background: #7e57c2;
                 transform: rotate(45deg) scale(0.92);
             }
+
             #note-2 {
                 width: 0;
                 height: 0;
@@ -133,6 +163,7 @@ class PieGame extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
                 border-right: 24px solid transparent;
                 border-bottom: 44px solid #EFE6DD;
             }
+
             #note-1 {
                 width: 0;
                 height: 0;
@@ -141,60 +172,73 @@ class PieGame extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
                 border-bottom: 41px solid #7EBDC2;
                 transform: rotate(45deg);
             }
+
             #note-0 {
                 width: 40px;
                 height: 40px;
                 background: #5c6bc0;
             }
+
             .concealed {
                 background: transparent;
             }
+
             #play-button-container {
                 position: relative;
                 width: 80px;
                 height: 80px;
             }
+
             #play-button-container svg {
                 position: absolute;
                 top: 0;
                 left: 0;
             }
+
             #play-button-container svg {
                 width: 80px;
                 height: 80px;
                 transform: rotate(-90deg);
             }
+
             #play-button-container svg circle {
                 fill: none;
                 stroke: #efe6dd;
                 stroke-width: 4;
                 transform: translateZ(0);
             }
+
             #tooltip {
                 margin: 0;
                 border-radius: 5px;
                 animation: tooltipFloat 360ms ease-in-out infinite alternate forwards;
             }
+
             #tooltip-content {
                 position: relative;
                 padding: 18px 24px;
                 margin: 0;
                 border-radius: 3px;
             }
+
             #tooltip-text {
                 text-align: center;
             }
-            #dialog-content {
-                padding: 32px 40px;
-                background: #1B1F23;
-                margin: 0;
-                color: #bdbdbd;
+
+            .dialog-content {
+                position: relative;
                 text-align: center;
                 font-size: 16px;
+                background: #1B1F23;
+                color: #9fa4a8;
+                padding: 32px 48px;
+                margin: 0;
             }
-            #dialog-content .tooltip-text {
+
+            .dialog-content .tooltip-text {
                 line-height: 24px;
             }
+
             #tooltip-content #tooltip-arrow {
                 position: absolute;
                 bottom: -10px;
@@ -204,8 +248,8 @@ class PieGame extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
                 border-top: 10px solid white;
                 border-left: 9px solid transparent;
                 border-right: 9px solid transparent;
-
             }
+
             button {
                 display: block;
                 font-family: -apple-system, BlinkMacSystemFont, sans-serif;
@@ -219,12 +263,14 @@ class PieGame extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
                 border: 1px solid rgba(255,255,255,0.5);
                 border-radius: 5px;
             }
+
             .life-icon {
                 fill: #9fa4a8;
                 --iron-icon-width: 18px;
                 --iron-icon-height: 18px;
                 margin-right: 2px;
             }
+
             #life-container {
                 position: relative;
                 top: 0;
@@ -232,30 +278,37 @@ class PieGame extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
                 width: 18px;
                 height: 18px;
             }
+
             #life-overlay, #life-container > iron-icon {
                 position: absolute;
                 bottom: 0;
                 left: 0;
             }
+
             #life-overlay {
                 width: 100%;
                 height: 100%;
                 background: #1B1F23;
                 z-index: 10;
-                opacity: 0;
+                opacity: 0.66;
             }
-            .disable-pointer {
-                pointer-events: none;
-            }
+
             @keyframes tooltipFloat {
                 from { transform: translateY(0); }
                 to { transform: translateY(-6px); }
             }
+
+            [invisible] {
+                visibility: hidden;
+                opacity: 0;
+            }
+
             [hidden] {
                 display: none !important;
             }
         </style>
         <div id="container" class="vertical layout center">
+            <!-- TOP SECTION -->
             <div id="top-section" class="horizontal layout end-justified">
                  <!-- Game display --> 
                 <div class="top-section-content flex horizontal layout center" hidden$="[[!gameMode]]">
@@ -268,21 +321,26 @@ class PieGame extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
                     <div id="game-point-display">[[score]]</div>
                 </div>
                 <!-- Warmup display --> 
-                <div class="top-section-content flex horizontal layout center" hidden$="[[gameMode]]">
-                    <div id="warmup-level-display">[[warmupDisplayLevel]]/5</div>
+                <div class="top-section-content flex horizontal layout center" hidden$="[[!warmupMode]]">
+                    <div class="warmup-icon" style$="[[_computeWarmupIconOpacity(warmupDisplayLevel, 1)]]"></div>
+                    <div class="warmup-icon" style$="[[_computeWarmupIconOpacity(warmupDisplayLevel, 2)]]"></div>
+                    <div class="warmup-icon" style$="[[_computeWarmupIconOpacity(warmupDisplayLevel, 3)]]"></div>
+                    <div class="warmup-icon" style$="[[_computeWarmupIconOpacity(warmupDisplayLevel, 4)]]"></div>
+                    <div class="warmup-icon" style$="[[_computeWarmupIconOpacity(warmupDisplayLevel, 5)]]"></div>
                 </div>
-                <div id="quit-game-trigger" on-down="quitGame">
+                <div id="exit-game-trigger" on-down="exitGame">
                     <iron-icon icon="pie-icons:menu"></iron-icon>
                 </div>
             </div>
-            <div class="wrapper layout vertical">
+            <!-- GAME FIELD --> 
+            <div id="game-field" class="layout vertical">
                 <div class="cell-container flex layout vertical">
 
                     <div class="row horizontal layout">
                         <div class="cell"></div>
                         <div class="cell key layout vertical center-center"
                              data-note="4"
-                             on-down="hit">
+                             on-down="playNote">
                             <div id="note-4" class="note"></div>
                         </div>
                         <div class="cell"></div>
@@ -297,7 +355,7 @@ class PieGame extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
                              class="cell key layout vertical center-center"
                              style="position: relative; top: -18px; left: 0;"
                              data-note="3"
-                             on-down="hit">
+                             on-down="playNote">
                             <div id="note-3" class="note"></div>
                         </div>
                         <div class="cell"></div>
@@ -312,7 +370,7 @@ class PieGame extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
                         <div class="cell key layout vertical center-center"
                              style="position: relative; top: 4px; left: -1px;"
                              data-note="2"
-                             on-down="hit"
+                             on-down="playNote"
                              hidden$="[[_isSmaller(revealIndex, 4)]]">
                             <div id="note-2" class="note"></div>
                         </div>
@@ -324,7 +382,7 @@ class PieGame extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
                         <div class="cell"></div>
                         <div class="cell key layout vertical center-center"
                              data-note="1"
-                             on-down="hit"
+                             on-down="playNote"
                              hidden$="[[_isSmaller(revealIndex, 5)]]">
                             <div id="note-1" class="note"></div>
                         </div>
@@ -337,7 +395,7 @@ class PieGame extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
                         <div id="note-0-container"
                              class="cell key layout vertical center-center"
                              data-note="0"
-                             on-down="hit"
+                             on-down="playNote"
                              hidden$="[[_isSmaller(revealIndex, 3)]]">
                             <div id="note-0" class="note"></div>
                         </div>
@@ -346,12 +404,13 @@ class PieGame extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
                     </div>
                 </div>
 
-                <div id="note-bars" class="horizontal layout">
+                <div id="note-bars" class="horizontal layout" invisible$="[[evaluationSuspended]]">
                     <template is="dom-repeat" items="[[botSequence]]">
                         <div class$="[[_computeProgressClass(item, index, userProgress, playbackIndex)]]"></div>
                     </template>
                 </div>
             </div>
+            <!-- BOTTOM SECTION -->
             <div id="bottom-section" class="flex vertical layout center-center">
                 <div id="play-button-container" class="l-relative layout vertical center-center">
                     <svg>
@@ -361,7 +420,7 @@ class PieGame extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
                                 r="36"
                                 stroke-dasharray="252"
                                 stroke-dashoffset="252"
-                                on-transitionend="onPlayButtonAnimationEnd"/>
+                                on-transitionend="togglePlayback"/>
                     </svg>
                     <play-button id="play-button" on-down="togglePlayback" playback="[[playback]]"></play-button>
                 </div>
@@ -370,7 +429,7 @@ class PieGame extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
         <paper-dialog id="tooltip"
                       vertical-align="top"
                       horizontal-align="center"
-                      vertical-offset="-72"
+                      vertical-offset="-84"
                       no-cancel-on-outside-click
                       no-cancel-on-esc-key>
             <div id="tooltip-content">
@@ -378,21 +437,22 @@ class PieGame extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
                 <div id="tooltip-arrow"></div>
             </div>
         </paper-dialog>
-        <paper-dialog id="dialog" on-iron-overlay-closed="_clearGame" with-backdrop>
-            <div id="dialog-content">
+        <paper-dialog id="game-over-dialog" on-iron-overlay-closed="_clearGame" with-backdrop>
+            <div class="dialog-content">
                 <div class="tooltip-text">Game over!</div>
                 <div class="tooltip-text">Score: [[score]]</div>
                 <button type="button"
                         on-down="_restartGameFromDialog">Play again</button>
             </div>
         </paper-dialog>
-        <paper-dialog id="warmup-finished-dialog" on-iron-overlay-closed="_clearGame" with-backdrop>
-            <div id="dialog-content">
+        <paper-dialog id="warmup-finished-dialog"
+                      on-iron-overlay-closed="_clearGame"
+                      modal>
+            <div class="dialog-content">
                 <div class="tooltip-text">Bravo!</div>
                 <div class="tooltip-text">You have mastered all notes.</div>
                 <button type="button"
-                        on-down="_restartGameFromDialog"
-                        data-redirect-to-game>Start a game</button>
+                        on-down="_startGameFromDialog">Start a game</button>
             </div>
         </paper-dialog>
         `;
@@ -401,136 +461,177 @@ class PieGame extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
     static get is() { return 'pie-game'; }
     static get properties() {
         return {
+            /**
+             * The melody the bot will play.
+             */
             botSequence: {
                 type: Array,
                 value: () => []
             },
+            /**
+             * The index of the last rightly-guessed note.
+             */
             userProgress: {
                 type: Number,
                 value: -1
             },
+            /**
+             * The index of the last note played by the bot.
+             */
             playbackIndex: {
                 type: Number,
                 value: -1
             },
-            reset: {
+            /**
+             * If the visual feedback of a wrong guess ought to show.
+             */
+            wrongNoteFeedback: {
                 type: Boolean,
                 value: false,
                 reflectToAttribute: true
             },
+            /**
+             * The game mode score.
+             */
             score: {
                 type: Number,
                 value: 0
             },
+            /**
+            * The wamup mode user level.
+            */
             warmupLevel: {
-                type: Number,
-                value: 20
-            },
-            gameLevel: {
                 type: Number,
                 value: 0
             },
-            revealIndex: {
-                computed: 'computeRevealIndex(gameLevel, warmupLevel)'
-            },
-            premiumSound: {
-                type: Boolean,
-                value: false,
-                observer: '_onPremiumSoundChanged'
-            },
-            lifeCount: {
-                type: Number,
-                value: 3
-            },
-            gameMode: {
-                type: Boolean,
-                computed: '_isGameMode(gameLevel)'
-            },
+            /**
+            * Which warmup level to display to the user.
+            */
             warmupDisplayLevel: {
                 type: Number,
-                computed: '_computeWarmupDisplayLevel(warmupLevel)'
+                computed: '_computeWarmupDisplayLevel(warmupLevel, warmup)'
             },
+            /**
+            * The game mode user level.
+            * This will determine how many notes (3, 4 or 5) are used in the scale.
+            */
+            gameLevel: {
+                type: Number,
+                value: 5
+            },
+            /**
+            * This controls what notes are shown.
+            */
+            revealIndex: {
+                computed: '_computeRevealIndex(gameLevel, warmupLevel)'
+            },
+            /**
+            * The game mode user lives.
+            */
+            lifeCount: {
+                type: Number,
+                value: 4
+            },
+            /**
+            * If we are in game mode.
+            */
+            gameMode: {
+                type: Boolean,
+                computed: '_computeGameMode(gameLevel)'
+            },
+            /**
+            * If we are in warmup mode.
+            */
+            warmupMode: {
+                type: Boolean,
+                computed: '_computeWarmupMode(warmupLevel)'
+            },
+            /**
+            * The list of the sound files.
+            */
+            sampleList: {
+                type: Array,
+                value: [
+                    'assets/sounds/piano-1.mp3',
+                    'assets/sounds/piano-2.mp3',
+                    'assets/sounds/piano-3.mp3',
+                    'assets/sounds/piano-4.mp3',
+                    'assets/sounds/piano-5.mp3',
+                ]
+            },
+            /**
+            * If the user should be able to play freely
+            * without evaluating the notes.
+            */
+            evaluationSuspended: {
+                type: Boolean,
+                value: false
+            },
+            /**
+            * If some actions should be temporarily disabled in the game flow.
+            * (e.g. when the playback button is animating or when it's game over).
+            */
+            blockAction: {
+                ype: Boolean,
+                value: false
+            },
+            /**
+            * The instance of the Warmup class to coordinate the warmup.
+            */
+            warmup: {
+                type: Object,
+                value: () => ({})
+            },
+            /**
+            * The instance of the Tutorial class to coordinate the tutorial.
+            */
+            tutorial: {
+                type: Object,
+                value: () => ({})
+            },
+            timeout: {
+                type: Number,
+                value: null
+            },
+            feedbackTimeout: {
+                type: Number,
+                value: null
+            }
         }
     }
-    constructor() {
-        super();
-        this.generateSequence = this.generateSequence.bind(this);
-    }
+
     connectedCallback() {
         super.connectedCallback();
-        // this.startTutorial();
-        this.tutorial = new Tutorial(this.$.tooltip, this.$['tooltip-text'], this.$['tooltip-arrow'], this);
-        this.tutorial = null;
+        this.warmup = new Warmup();
         this.addEventListener('tutorial-finished', () => {
-            console.log('tutorial done');
-        })
-        // this.tutorial.stepList = [
-        //     {
-        //         userTarget: this.$['play-button'],
-        //         tooltipText: 'Tap here to play a melody.',
-        //         tooltipTarget: this.$['play-button']
-        //     },
-        //     {
-        //         appEvent: 'playback-changed'
-        //     },
-        //     {
-        //         userTarget: this.$['note-0-container'],
-        //         tooltipTarget: this.$['note-0-container'],
-        //         tooltipText: 'OK, there were two notes.<br> Can this be the first?'
-        //     },
-        //     {
-        //         tooltipTarget: this.$['note-0'],
-        //         tooltipText: 'Yay, that\'s right!',
-        //         duration: 1500
-        //     },
-        //     {
-        //         userTarget: this.$['note-3-container'],
-        //         tooltipTarget: this.$['note-3'],
-        //         tooltipText: 'This the second?'
-        //     },
-        //     {
-        //         tooltipTarget: this.$['note-3'],
-        //         tooltipText: 'Brilliant. Ready to go, Maestro!',
-        //         duration: 2500
-        //     },
-        // ];
+            localStorage.setItem('tutorial-done', true);
+            this.startFlow(5, 0);
+        });
+        this.dispatchEvent(
+            new CustomEvent('pie-game-connected', {
+                bubbles: true,
+                composed: true
+            })
+        );
     }
-    _onPremiumSoundChanged(premium) {
-        if (premium) {
-            this.sampleList = ([
-                'assets/sounds/ppiano-1.wav',
-                'assets/sounds/ppiano-2.wav',
-                'assets/sounds/ppiano-3.wav',
-                'assets/sounds/ppiano-4.wav',
-                'assets/sounds/ppiano-5.wav',
-            ]);
-        } else {
-            this.sampleList = ([
-                'assets/sounds/piano-1.wav',
-                'assets/sounds/piano-2.wav',
-                'assets/sounds/piano-3.wav',
-                'assets/sounds/piano-4.wav',
-                'assets/sounds/piano-5.wav',
-            ]);
-        }
-        // Load the samples only if the audiocontext is ready and not before any user gesture
-        if (window.context && window.context.state === 'running') {
-            this.init();
-        }
-            
-    }
-    hit(e) {
-        e.stopPropagation();
-        if (this.tutorial && tutorial.active && this.tutorial.activeTarget !== e.currentTarget) {
-            return;
-        }
-        e.currentTarget.dispatchEvent(new Event('tutorial-tap'));
-        const noteIndex = parseInt(e.currentTarget.getAttribute('data-note'));
 
-        // No action if playback is ongoing, except if it's the last note
-        if (this.playback && !this.lastBotNote) {
+    /**
+     * On-down action for the displayed notes
+     */
+    playNote(e) {
+        e.stopPropagation();
+
+        // Return if tutorial is active and not targeting this element,
+        // bot playback hasn't played the last note, or animation is ongoing
+        if ((this.tutorial.active && !this.tutorial.isElementTarget(e)) || (this.playback && !this.lastBotNote) || this.blockAction) {
             return;
         }
+        const element = e.currentTarget;
+        const note = parseInt(element.getAttribute('data-note'));
+
+        // Dispatch an event that for the tutorial module.
+        e.currentTarget.dispatchEvent(new Event('tutorial-tap'));
+
         // If it's the last note, turn off the playback to avoid the source
         // being disconnected later
         if (this.lastBotNote) {
@@ -538,156 +639,270 @@ class PieGame extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
             this.lastBotNote = false;
         }
 
-        const element = e.currentTarget;
-        const note = parseInt(element.getAttribute('data-note'));
-
         // Stop showing red on the notebars
-        this.reset = false
-        
+        this.wrongNoteFeedback = false
+
+        // Animate the active element 
         element.classList.add('hit');
         setTimeout(() => {
             element.classList.remove('hit');
         }, 250);
 
-        this.playSound(note);
-        if (!this.botSequence || this.botSequence.length === 0) {
-            return;
+        this.playSound(note, true);
+
+        // User has heard at least two notes, so if they are playing sounds, display the full melody
+        // to allow evaluation
+        if (this.userStoppedPlaybackAfterHearingMultipleNotes) {
+            this.playbackIndex = this.botSequence.length - 1;
         }
 
+        // Evalutate the played note if a bot melody is present,
+        // flow not suspended, not in tutorial and 
+        // melody has played through (playback index is not -1)
+        if (this.botSequence.length > 0
+                && !this.tutorial.active
+                && !this.evaluationSuspended
+                && this.playbackIndex !== -1) {
+            this.evaluatePlayedNote(note);
+
+            // Reset this flag as user guesses are evaluated now
+            this.userStoppedPlaybackAfterHearingMultipleNotes = false;
+        }
+        
+    }
+
+    /**
+     * Evaluate if the user note is correct
+     */
+    evaluatePlayedNote(note) {
         const currentNoteIndex = this.userProgress + 1;
-        console.log('current note index', currentNoteIndex);
 
         // Right guess
         if (this.botSequence[currentNoteIndex].noteIndex === note) {
             this.userProgress = this.userProgress + 1;
-            this.checkGame();
-            this.score = this.score + 10;
+            if (this.userProgress === this.botSequence.length - 1) {
+                this.progressAfterCorrectGuess();
+            }
         // Wrong guess
         } else {
-            this.reset = true;
-            setTimeout(() => this.reset = false, 1200);
+            // Cancel previous red feedback timeout
+            if (this.feedbackTimeout) {
+                clearTimeout(this.feedbackTimeout);
+                this.feedbackTimeout = null;
+                this.wrongNoteFeedback = false;
+
+                // Show red again
+                setTimeout(() => {
+                    this.wrongNoteFeedback = true;
+                }, 50);
+            } else {
+                // Show red immediately
+                this.wrongNoteFeedback = true;
+            }
+            this.wrongGuessStreak = this.wrongGuessStreak ? this.wrongGuessStreak + 1 : 1;
+
+            // If there are too many wrong guesses without listening to the melody,
+            // suspend the evaluation of the notes and allow free play.
+            if (this.wrongGuessStreak === 4) {
+                this.evaluationSuspended = true;
+                this.playbackIndex = -1;
+            }
+            
+            this.feedbackTimeout = setTimeout(() => {
+                this.wrongNoteFeedback = false;
+                this.feedbackTimeout = null;
+            }, 1200); 
             this.userProgress = -1;
             this.score = this.score - 10;
+
             if (this.gameMode) {
                 this.lifeCount -= 1;
-                if (this.lifeCount === 0) {
-                    console.log('game over');
-                    setTimeout(() => this.$.dialog.open(), 1000);
-                }
-            }
-        }
-    }
-    /*
-    UI helper to compute the height of the overlay covering the heart symbol 
-    **/
-    _computeLifeOverlayHeight() {
-        let response;
-        if (this.lifeCount === 3) {
-            response = 'opacity: 0;';
-        } else if (this.lifeCount === 2) {
-            response = 'opacity: 0.33;';
-        } else {
-            response = 'opacity: 0.66;';
-        }
-        return response;
-    }
-    checkGame(force) {
-        if (force || this.userProgress === this.botSequence.length - 1) {
-            // Has won
-            this.score = this.score + 20;
-            this.lifeCount = 3;
-            // Finished warmup, exit gameflow
-            if (this.warmupLevel === 20) {
-                this.$['warmup-finished-dialog'].open();
-                return;
-            }
 
-            // Warmup
-            if (this.warmupLevel > 0) {
-                // Finish warmup
-                if (this.warmupLevel === 16) {
-                    this.warmupLevel = 0;
-                    // Increment warmup
-                } else {
-                    this.warmupLevel++;
+                // Game over
+                if (this.lifeCount === 0) {
+                    this.wrongGuessStreak = 0;
+                    this.blockAction= true;
+
+                    // This is set to false to avoid hiding note bars
+                    this.evaluationSuspended = false;
+
+                    // Don't allow playback or exit game momentarily
+                    this.$['play-button'].style['pointer-events'] = 'none';
+                    this.$['exit-game-trigger'].style['pointer-events'] = 'none';
+
+                    setTimeout(() => {
+                        this.blockAction = false;
+                        this.$['play-button'].style['pointer-events'] = 'auto';
+                        this.$['exit-game-trigger'].style['pointer-events'] = 'auto';
+                        this.$['game-over-dialog'].open();
+                    }, 300);
                 }
             }
-            // Clear round and start new with delay
-            setTimeout(() => {
-                this.set('botSequence', []);
-                this.userProgress = -1;
-            }, 850);
-            setTimeout(() => {
-                this.startPlaybackWithDelay();
-            }, 850);
         }
     }
-    computeRevealIndex (gameLevel, warmupLevel) {
-        let response;
+
+    progressAfterCorrectGuess() {
+        // Correct guess!
+        // Game mode - Add score and restore lives
+        if (this.gameMode) {
+            // 40, 50 or 60 earned points
+            let earnedPoints = 10 + (this.gameLevel * 10);
+            this.score = this.score + earnedPoints;
+            this.lifeCount = 4;
+
+        // Warmup mode - end of warmup
+        } else if (this.warmupLevel === 20) {
+            this.blockAction= true;
+
+            // Don't allow playback or exit game momentarily
+            this.$['play-button'].style['pointer-events'] = 'none';
+            this.$['exit-game-trigger'].style['pointer-events'] = 'none';
+
+            setTimeout(() => {
+                this.blockAction = false;
+                this.$['play-button'].style['pointer-events'] = 'auto';
+                this.$['exit-game-trigger'].style['pointer-events'] = 'auto';
+                this.$['warmup-finished-dialog'].open();
+            }, 300);
+            return;
+
+        // Warmup mode - continue
+        } else if (this.warmupLevel > 0) {
+            this.warmupLevel++;
+        }
+
+        // Don't allow notes momentarily
+        this.blockAction = true;
+
+        // Don't allow playback momentarily
+        this.$['play-button'].style['pointer-events'] = 'none';
+
+        // Clear round and start botSequence
+        this.restartTimeout = setTimeout(() => {
+            this.set('botSequence', []);
+            this.userProgress = -1;
+            this.$['play-button'].style['pointer-events'] = 'auto';
+            this._startPlaybackWithDelay();
+            this.restartTimeout = null;
+        }, 850);
+    }
+
+    /**
+     * Compute revealIndex.
+     */
+    _computeRevealIndex (gameLevel, warmupLevel) {
+        let revealIndex;
         if (this.warmupLevel) {
             if (0 <= this.warmupLevel && this.warmupLevel < 3) {
-                response = 2; 
+                revealIndex = 2; 
             } else if (3 <= this.warmupLevel && this.warmupLevel < 8) {
-                response = 3;
+                revealIndex = 3;
             } else if (8 <= this.warmupLevel && this.warmupLevel < 14) {
-                response = 4;
+                revealIndex = 4;
             } else if (14 <= this.warmupLevel) {
-                response = 5;
+                revealIndex = 5;
             }
         } else if (this.gameLevel) {
-            response = this.gameLevel;
+            revealIndex = this.gameLevel;
         }
-        return response;
+        return revealIndex;
     }
-    startPlaybackWithDelay() {
+
+    _startPlaybackWithDelay() {
+        this.blockAction = true;
         this.shadowRoot.querySelector('#play-button-container svg circle').style.transition = 'stroke-dashoffset 1500ms cubic-bezier(0.2, 0.2, 0.7, 0.8)';
         this.shadowRoot.querySelector('#play-button-container svg circle').setAttribute('stroke-dashoffset', 0);
     }
+
     togglePlayback(e) {
-        if (this.tutorial && this.tutorial.active && this.tutorial.activeTarget !== e.currentTarget) {
+        // Stop if tutorial active, but the playback button is the anticipated user action
+        if (this.tutorial.active && !this.tutorial.isElementTarget(e)) {
             return;
         }
+
+        // Toggle state
         this.playback = !this.playback;
-        e.currentTarget.dispatchEvent(new Event('tutorial-tap'));
+
+        // Dispatch event to the tutorial module
+        this.$['play-button'].dispatchEvent(new Event('tutorial-tap'));
         
-        // Playback button hit straight after winning
-        this.resetPlaybackButtonStrokeOffset();
+        // Set back animation on play button
+        this._resetPlaybackButtonStrokeOffset();
+
+        // Stop if playback was turned off
         if (!this.playback) {
             return;
         }
+
+        // Turn off free play without evaluation
+        this.evaluationSuspended = false;
+
+        // Turn off not being able to hit notes while playback button animation is playing
+        this.blockAction = false;
+        
+        // Reset counting wrong guesses that would switch over to free play
+        this.wrongGuessStreak = 0;
+
         // Reset the guessed notes
         this.userProgress = -1;
         if (this.botSequence.length === 0) {
             this.playbackIndex = -1;
-            this.generateSequence();
+            this._generateSequence();
         }
-        this.playBotSequence();
+        this._playBotSequence();
     }
-    quitGame() {
-        if (this.tutorial && this.tutorial.active) {
+
+    exitGame(e) {
+        if (this.tutorial.active && !this.tutorial.isElementTarget(e)) {
             return;
         }
-        this.resetPlaybackButtonStrokeOffset();
+        this._resetPlaybackButtonStrokeOffset();
+        this.blockAction = false;
+
+        // If we are at the end of a correct guess, but the timeout has not kicked in,
+        // cancel the timeout and set the ground to the next melody
+        if (this.restartTimeout) {
+            this.resetRestartTimeout();  
+        }
+
         this.dispatchEvent(
-            new CustomEvent('quit-game-request', {
+            new CustomEvent('exit-game-request', {
                 bubbles: true,
                 composed: true
             })
         );
     }
-    generateSequence() {
+
+    resetRestartTimeout() {
+        this.set('botSequence', []);
+        this.$['play-button'].style['pointer-events'] = 'auto';
+        window.clearTimeout(this.restartTimeout);
+        this.restartTimeout = null;
+    }
+
+    _generateSequence() {
         let botSequenceCandidate;
         do {
-            botSequenceCandidate = this.doGenerateSequence();
-        } while(!this.arraysDiffer(botSequenceCandidate, this.botSequence));
+            botSequenceCandidate = this._doGenerateSequence();
+        } while(!this._arraysDiffer(botSequenceCandidate, this.botSequence));
         this.set('botSequence', botSequenceCandidate);
     }
-    doGenerateSequence() {
-        const pitchArray = this._getPitchArray();
-        const numberOfNotes = this._getNumberOfNotes();
-        const warmupLevel = this.warmupLevel;
-        const forcedWarmupSequence = (warmupLevel > 0 && warmupLevel < 5) ||
-            warmupLevel === 8 || warmupLevel === 9 || (warmupLevel >= 14 && warmupLevel < 21);
+
+    _doGenerateSequence() {
+        const pitchArray =
+                this.warmupLevel ? this.warmup.getPitchArray(this.warmupLevel) : this._getPitchArray();
+        let numberOfNotes;
+
+        if (this.warmupLevel) {
+            numberOfNotes = this.warmup.getNumberOfNotes(this.warmupLevel);
+        } else if (this.gameLevel === 3) {
+            // 2 or 3
+            numberOfNotes = Math.floor(Math.random() * 2) + 2;
+        } else {
+            // 2, 3 or 4
+            numberOfNotes = Math.floor(Math.random() * 3) + 2;
+        }
+        const fixedWarmupNotes = this.warmup.hasFixedNotes(this.warmupLevel);
         let sequence = [];
         do {
             for (let i = 0; i < numberOfNotes; i++) {
@@ -695,12 +910,12 @@ class PieGame extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
                 sequence[i] = { noteIndex: pitchArray[Math.floor(Math.random() * pitchArray.length)], length: 4 };
             }
             // Post warmup
-            if (!forcedWarmupSequence) {
+            if (!fixedWarmupNotes) {
                 // Going through the crotchet values and replace some with quavers
                 let indexesToTransform = [];
                 sequence.forEach((item, index) => {
                     // 65% times don't transform to quavers or only once if it's warmup
-                    if (Math.random() <= 0.65 || (warmupLevel > 0 && indexesToTransform.length > 0 )) {
+                    if (Math.random() <= 0.65 || (this.warmupLevel > 0 && indexesToTransform.length > 0 )) {
                         return;
                     }
                     indexesToTransform.push(index);
@@ -713,103 +928,37 @@ class PieGame extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
                     sequence.splice(indexToTransform + 1, 0,
                         { noteIndex: pitchArray[Math.floor(Math.random() * pitchArray.length)], length: 2 });
                 }
-            // Forced warmup sequence
+            // Fixed warmup sequence
             } else {
-                switch (warmupLevel) {
-                    case 1:
-                        sequence = [{ noteIndex: 3, length: 4 }, { noteIndex: 4, length: 4 }];
-                        break;
-                    case 2:
-                        sequence = [{ noteIndex: 4, length: 4 }, { noteIndex: 3, length: 4 }];
-                        break;
-                    case 3:
-                        sequence[sequence.length - 1] = { noteIndex: 0, length: 4 };
-                        break;
-                    case 4:
-                        sequence[0] = { noteIndex: 0, length: 4 };
-                        break;
-                    case 8:
-                        sequence[sequence.length - 1] = { noteIndex: 2, length: 4 };
-                        break;
-                    case 9:
-                        sequence[0] = { noteIndex: 2, length: 4 };
-                        break;
-                    case 14:
-                        sequence[sequence.length - 1] = { noteIndex: 1, length: 4 };
-                        break;
-                    case 15:
-                        sequence[0] = { noteIndex: 1, length: 4 };
-                        break;
-                }
+                sequence = this.warmup.insertFixedNotes(this.warmupLevel, sequence);
             }
             // Repeat until melody has at least two different notes
         } while (sequence.filter(item => sequence[0].noteIndex !== item.noteIndex).length === 0);
         return sequence;
     }
-    /*  Warm up starting at 2 pitches + 2 notes
-        and ending at 5 pitches + 3 notes
-        Steps:
-        1: 2 pitches, 2 notes (this should be hardcoded)
-        2: 2, 2 (this should be hardcoded)
-        3: 3, 2 (last note hardcoded to new)
-        4: 3, 3 (first note hardcoded to new)
-        5: 3, 3
-        6: 3, 3
-        7: 3, 3
-        8: 4, 2 (last note hardcoded to new)
-        9: 4, 3 (first note hardcoded to new)
-        10: 4, 3
-        11: 4, 3
-        12: 4, 3
-        13: 4, 3
-        14: 5, 2 (l)
-        15: 5, 3 (f)
-        16: 5, 3
-    **/
-    _getNumberOfNotes() {
-        let response;
-        let index = this.warmupLevel;
-        if (index) {
-            if ((1 <= index && index < 3) || (index === 8 || index === 14)) {
-                response = 2;
-            } else {
-                response = 3;
-            }
-        } else {
-            response = Math.floor(Math.random() * 3) + 2;
-        }
-        return 2;
-    }
+
     _getPitchArray() {
+        let pitchArray;
         const levelMap = {
             3: [3, 4, 0],
             4: [3, 4, 0, 2],
             5: [3, 4, 0, 2, 1]
         };
-        if (this.gameLevel) {
-            return levelMap[this.gameLevel];
-        }
-        let response;
-        let warmupLevel = this.warmupLevel;
-        if (warmupLevel) {
-            if (1 <= warmupLevel && warmupLevel < 3) {
-                response = [3, 4];
-            } else if (3 <= warmupLevel && warmupLevel < 8) {
-                response = [3, 4, 0];
-            } else if (8 <= warmupLevel && warmupLevel < 14) {
-                response = [3, 4, 0, 2];
-            } else {
-                response = [3, 4, 0, 2, 1];
-            }
+        if (this.gameLevel === 3) {
+            pitchArray = [3, 4, 0];
+        } else if (this.gameLevel === 4) {
+            pitchArray = [3, 4, 0, 2];
         } else {
-            response = [3, 4, 0, 2, 1];;
+            pitchArray = [3, 4, 0, 2, 1];
         }
-        return response;
+        return pitchArray;
     }
-    arraysDiffer(arr1, arr2) {
+
+    _arraysDiffer(arr1, arr2) {
         return arr1.length !== arr2.length || arr1.filter((item, index) => item !== arr2[index]).length > 0;
     }
-    playBotSequence() {
+
+    _playBotSequence() {
         let currentTime = 0;
         let tempArray = [];
         for (let k = 0; k < this.botSequence.length; k++) {
@@ -824,34 +973,97 @@ class PieGame extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
         this.set('scheduledNotes', tempArray);
         setTimeout(this.startPlayback.bind(this), 0);
     }
-    _restartGameFromDialog(e) {
-        if (e.currentTarget.hasAttribute('data-redirect-to-game')) {
-            this.gameLevel = 5;
-            this.warmupLevel = 0;
-            this.$['warmup-finished-dialog'].close();
-        } else {
-            this.$.dialog.close();
-        }
-        this.startGame(this.gameLevel, this.warmupLevel);
+
+    _startGameFromDialog() {
+        // Coming from a warmup. Start a game.
+        this.gameLevel = 5;
+        this.warmupLevel = 0;
+        this.startFlow(this.gameLevel, this.warmupLevel);
+        this.$['warmup-finished-dialog'].close();
     }
+
+    _restartGameFromDialog() {
+        // Already in game mode. Replay the game.
+        this.$['game-over-dialog'].close();
+        this.startFlow(this.gameLevel, this.warmupLevel);
+    }
+
     _clearGame() {
         this.set('botSequence', []);
         this.userProgress = -1;
         this.playbackIndex = -1;
         this.score = 0;
-        this.lifeCount = 3;
+        this.lifeCount = 4;
+        this.blockAction = false;
+        this.$['play-button'].style['pointer-events'] = 'auto';
     }
+
     // Public method
-    startGame(gameLevel, warmupLevel) {
+    startFlow(gameLevel, warmupLevel) {
         this._clearGame();
+        this.playback = false;
         this.gameLevel = gameLevel || 0;
         this.warmupLevel = warmupLevel || 0;
-        setTimeout(this.startPlaybackWithDelay.bind(this), 0);
+        window.requestAnimationFrame(() => {
+            window.requestAnimationFrame(this._startPlaybackWithDelay.bind(this));
+        });
+        // setTimeout(this._startPlaybackWithDelay.bind(this), 0);
     }
+
+    // Public method
+    stopPlayback() {
+        this.playback = false;
+
+        // Clear displayed notes if the melody hasn't been fully played.
+        if (this.playbackIndex < this.botSequence.length - 1) {
+            this.playbackIndex = -1;
+        }
+
+        // If animated restart is due to start, clear it
+        if (this.restartTimeout) {
+            this.resetRestartTimeout();  
+        }
+
+        // If animated restart is ongoing, stop it
+        this._resetPlaybackButtonStrokeOffset();
+    }
+
+    /*
+    UI helper to compute the height of the overlay covering the heart symbol 
+    **/
+    _computeLifeOverlayHeight() {
+        let styleString;
+        if (this.lifeCount === 4) {
+            styleString = 'height: 0;';
+        } else if (this.lifeCount === 3) {
+            styleString = 'height: 25%;';
+        } else if (this.lifeCount === 2) {
+            styleString = 'height: 50%;';
+        } else if (this.lifeCount === 1) {
+            styleString = 'height: 75%;';
+        } else {
+            styleString = 'height: 100%';
+        }
+        return styleString;
+    }
+
+    _computeWarmupIconOpacity(warmupDisplayLevel, markupInstance) {
+        let styleString;
+        if (warmupDisplayLevel >= markupInstance) {
+            styleString = 'opacity: 1;'
+        } else {
+            styleString = 'opacity: 0.2;'
+        }
+        return styleString;
+    }
+
     _computeWarmupDisplayLevel(warmupLevel) {
-        const pitchArray = this._getPitchArray();
-        return pitchArray.length;
+        if (!this.warmup || !this.warmupLevel) {
+            return;
+        }
+        return this.warmup.getPitchArray(warmupLevel).length;
     }
+
     _computeProgressClass(item, itemIndex, userProgress, playbackIndex) {
         let classString = 'progress-section';
         if (item.length === 2) {
@@ -867,18 +1079,22 @@ class PieGame extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
         }
         return classString;
     }
-    resetPlaybackButtonStrokeOffset() {
+
+    _resetPlaybackButtonStrokeOffset() {
         this.shadowRoot.querySelector('#play-button-container svg circle').style.transition = 'none';
         this.shadowRoot.querySelector('#play-button-container svg circle').setAttribute('stroke-dashoffset', 252);
     }
-    onPlayButtonAnimationEnd() {
-        this.togglePlayback();
-    }
+
     _isSmaller(compared, base) {
         return compared < base;
     }
-    _isGameMode(gameLevel) {
+
+    _computeGameMode(gameLevel) {
         return gameLevel > 0;
+    }
+
+    _computeWarmupMode(warmupLevel) {
+        return warmupLevel > 0;
     }
 }
 customElements.define(PieGame.is, PieGame);
