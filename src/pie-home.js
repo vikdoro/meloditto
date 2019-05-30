@@ -48,7 +48,7 @@ class PieHome extends GestureEventListeners(PolymerElement) {
 
             #pie-home-body {
                 position: relative;
-                top: -18px;
+                top: -24px;
             }
 
             #home-top-bar {
@@ -56,12 +56,10 @@ class PieHome extends GestureEventListeners(PolymerElement) {
             }
 
             #quit-settings-trigger {
+                position: relative;
+                z-index: 10;
                 box-sizing: border-box;
                 padding: 16px;
-            }
-
-            #premium-switch {
-                touch-action: manipulation;
             }
 
             .switch-container {
@@ -202,33 +200,13 @@ class PieHome extends GestureEventListeners(PolymerElement) {
                 </div>
                 <button type="button"
                         data-game-start
-                        on-down="startGame">Start game</button>
+                        on-down="startGameOrWarmup">Start game</button>
             </div>
             <h3>Training</h3>
             <div class="home-card">
                 <button type="button"
                         data-warmup
-                        on-down="startGame">Start training</button>
-            </div>
-            <h3>Premium</h3>
-            <div class="home-card"> 
-                <template is="dom-if" if="[[premiumUser]]">
-                    <div class="horizontal layout center">
-                        <div class="flex">Premium samples</div>
-                        <div class="switch-container">
-                            <input id="premium-switch" class="switch" type="checkbox" on-change="onPremiumSoundChange">
-                            <label for="premium-switch" on-down="switchPremiumSound"></label>
-                        </div>
-                    </div>
-                </template>
-                <template is="dom-if" if="[[!premiumUser]]">
-                    <div class="vertical layout center">
-                        <p>Upgrade to real piano sound</p>
-                        <button id="upgrade-btn"
-                                type="button"
-                                on-down="openPurchaseDialog">Buy premium</button>
-                    </div>
-                </template>
+                        on-down="startGameOrWarmup">Start training</button>
             </div>
         </div>
         `;
@@ -237,45 +215,13 @@ class PieHome extends GestureEventListeners(PolymerElement) {
     static get is() { return 'pie-home'; }
     static get properties() {
         return {
-            premiumUser: {
-                type: Boolean
-            },
-            premiumSound: {
-                type: Boolean,
-                notify: true,
-            },
             gameLevel: {
                 type: Number,
                 value: 5
             }
         }
     }
-    constructor() {
-        super();
-    }
-    connectedCallback() {
-        super.connectedCallback();
-    }
-    purchaseConfirmed() {
-        console.log('dismissed');
-        store.order('melowise1')
-                .initiated(function () {
-                    console.log('ORDER INITIATED YOYOYOYO');
-                    // order initiated, waiting approval...
-                })
-                .error(function (err) {
-                    console.log('ORDER ERRORR BOOOOOOOO');
-                });
-    }
-    openPurchaseDialog() {
-        console.log('open dialog');
-        navigator.notification.confirm(
-            'Do you want to buy one Premium Sample Pack for €2.29?',
-            this.purchaseConfirmed,
-            'Confirm Your In-App Purchase',
-            ['Cancel', 'Buy']
-        );
-    }
+
     quitSettings() {
         this.dispatchEvent(
             new CustomEvent('quit-settings-request', {
@@ -284,6 +230,10 @@ class PieHome extends GestureEventListeners(PolymerElement) {
             })
         );
     }
+
+    /**
+     *  Set the game level from the displayed options.
+     */
     selectGameLevel(e) {
         const elements = [...this.shadowRoot.querySelectorAll('.level-bar')];
         elements.forEach(el => {
@@ -293,12 +243,11 @@ class PieHome extends GestureEventListeners(PolymerElement) {
         this.gameLevel = parseInt(e.currentTarget.getAttribute('data-game-level'));
         e.currentTarget.classList.add('selected');
     }
-    switchPremiumSound(e) {
-        e.preventDefault();
-        const newValue = !this.shadowRoot.querySelector('#premium-switch').checked;
-        this.shadowRoot.querySelector('#premium-switch').checked = this.premiumSound = newValue;
-    }
-    startGame(e) {
+
+    /**
+     *  Dispatch event to start a game or a warmup.
+     */
+    startGameOrWarmup(e) {
         const gameLevel = e.currentTarget.getAttribute('data-game-start') !== null ?
              this.gameLevel : 0;
         const warmupLevel = e.currentTarget.getAttribute('data-warmup') !== null ? 1 : 0;

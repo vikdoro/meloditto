@@ -1,65 +1,40 @@
-export default class Tutorial {
-  constructor(tooltip, tooltipTextElement, tooltipArrowElement, view) {
-      this._tooltip = tooltip;
-      this._tooltipTextElement = tooltipTextElement;
-      this._tooltipArrowElement = tooltipArrowElement;
+class Tutorial {
+  constructor(view) {
+      this._tooltip = view.$['tooltip'];
+      this._tooltipTextElement = view.$['tooltip-text'];
+      this._tooltipArrowElement = view.$['tooltip-arrow'];
       this._view = view;
       this._active = true;
       this._activeTarget = null;
-      this.proceedToNextStep = this.proceedToNextStep.bind(this);
+      this._proceedToNextStep = this.proceedToNextStep.bind(this);
+      view.set('botSequence', [{ noteIndex: 0, length: 4 }, { noteIndex: 3, length: 4 }]);
     }
    
     get active() {
       return this._active;
-    }
-    set active(newValue) {
-      this._active = newValue;
-    }
-    get activeTarget() {
-      return this._activeTarget;
-    }
-    get tooltip() {
-      return this._tooltip;
-    }
-
-    set tooltip(newTooltip) {
-      this._tooltip = newTooltip;
-    }
-
-
-    get tooltipDialog() {
-      return this._tooltipDialog;
-    }
-
-    set tooltipDialog(newTooltipDialog) {
-      this._tooltipDialog = newTooltipDialog;
-    }
-
-    get stepList() {
-      return this._stepList;
     }
 
     set stepList(stepList) {
       this._stepList = stepList;
       this.setStep(this._stepList.shift(), 0);
     }
-    test() {
-      this._view.shadowRoot.querySelector('#tooltip').open();
-    }
+
     setStep(step) {
       if (typeof step === 'undefined') {
         this._active = false;
+        this._view.dispatchEvent(new Event('tutorial-finished'));
         return;
       }
-      if (step.userTarget) {
-        this.setUserStep(step.userTarget);
-        this.openTooltip(step.tooltipTarget, step.tooltipText);
-        
+      const userTarget = this._view.$[step.userTarget];
+      const tooltipTarget = this._view.$[step.tooltipTarget];
+      if (userTarget) {
+        this.setUserStep(userTarget);
+        this.openTooltip(tooltipTarget, step.tooltipText);
       } else if (step.appEvent) {
         this.setAppStep(step.appEvent);
         this._tooltip.close();
       } else {
-        this.openTooltip(step.tooltipTarget, step.tooltipText);
+        this.openTooltip(tooltipTarget, step.tooltipText);
         this._tooltipArrowElement.setAttribute('hidden', true);
         setTimeout(() => {
           this._tooltip.close();
@@ -67,63 +42,41 @@ export default class Tutorial {
           this.setStep(this._stepList.shift());
         }, step.duration);
       }
-      this._activeTarget = step.userTarget ? step.userTarget : null;
+
+      // Add a bit of delay before a user action is accepted on the target
+      // This will allow the tooltip to properly display before continuing
+      this._activeTarget = null;
+      setTimeout(() => {
+        this._activeTarget = userTarget ? userTarget : null;
+      }, 350);
     }
-    openTooltip(target, text,) {
+
+    openTooltip(target, text) {
       this._tooltip.positionTarget = target;
       this._tooltipTextElement.innerHTML = text;
       this._tooltip.open();
       this._tooltip.notifyResize();
     }
+
+    /**
+     * A public method to find out if an element is currently targeted by the tutorial
+     */
+
+    isElementTarget(e) {
+      return this._active && this._activeTarget === e.currentTarget;
+    }
+
     setUserStep(target) {
-      target.addEventListener('tutorial-tap', this.proceedToNextStep);
+      target.addEventListener('tutorial-tap', this._proceedToNextStep, {once: true});
     }
+
     setAppStep(appEvent) {
-      this._view.addEventListener(appEvent, this.proceedToNextStep);
+      this._view.addEventListener(appEvent, this._proceedToNextStep, {once: true});
     }
+
     proceedToNextStep(e) {
-      e.currentTarget.removeEventListener('tutorial-tap', this.proceedToNextStep);
-      this.setStep(this._stepList.shift());
-    }
-    // Method
-    runNext() {
-      this._tutorialLevel += 1;
-      const noteElements = [...view.shadowRoot.querySelectorAll('.note')];
-      switch (this._tutorialLevel) {
-        case 1:
-          this.tutorialText = 'Click here to play a melody!';
-          break;
-        case 2:
-          this.$.tooltip.close();
-          break;
-        case 3:
-          this.tutorialText = 'now this';
-          noteElements.forEach(note => {
-            if (note.id !== 'note-0') {
-              note.parentElement.classList.add('disable-pointer');
-            }
-          });
-          this.openTooltip(this.$['note-0']);
-          break;
-        case 4:
-          noteElements.forEach(note => {
-            note.parentElement.classList.remove('disable-pointer');
-          });
-          this.$.tooltip.close();
-          break;
-        case 5:
-          this.tutorialText = 'now this';
-          this.openTooltip(this.$['note-0']);
-          break;
-        case 9:
-          sequence[0] = { noteIndex: 2, length: 4 };
-          break;
-        case 14:
-          sequence[sequence.length - 1] = { noteIndex: 1, length: 4 };
-          break;
-        case 15:
-          sequence[0] = { noteIndex: 1, length: 4 };
-          break;
-      }
+      window.requestAnimationFrame(() => {
+        this.setStep(this._stepList.shift());
+      });
     }
 }

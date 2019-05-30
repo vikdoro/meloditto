@@ -14,7 +14,7 @@ class PlayButton extends PolymerElement {
                 border: none;
                 outline: none;       
                 fill: rgba(255,255,255,0.9);
-                background-color: slategray;         
+                background-color: #708090;         
                 border-radius: 50%;
                 cursor: pointer;
                 margin: 0; /* Safari */
