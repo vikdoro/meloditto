@@ -4,6 +4,146 @@
     {
       "description": "",
       "summary": "",
+      "path": "src/pie-home.js",
+      "properties": [
+        {
+          "name": "gameLevel",
+          "type": "number | null | undefined",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 217,
+              "column": 12
+            },
+            "end": {
+              "line": 220,
+              "column": 13
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "attributeType": "Number"
+            }
+          },
+          "defaultValue": "5"
+        }
+      ],
+      "methods": [
+        {
+          "name": "quitSettings",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 224,
+              "column": 4
+            },
+            "end": {
+              "line": 231,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [],
+          "return": {
+            "type": "void"
+          }
+        },
+        {
+          "name": "selectGameLevel",
+          "description": "Set the game level from the displayed options.",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 236,
+              "column": 4
+            },
+            "end": {
+              "line": 244,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "e"
+            }
+          ],
+          "return": {
+            "type": "void"
+          }
+        },
+        {
+          "name": "startGameOrWarmup",
+          "description": "Dispatch event to start a game or a warmup.",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 249,
+              "column": 4
+            },
+            "end": {
+              "line": 263,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "e"
+            }
+          ],
+          "return": {
+            "type": "void"
+          }
+        }
+      ],
+      "staticMethods": [],
+      "demos": [],
+      "metadata": {},
+      "sourceRange": {
+        "start": {
+          "line": 6,
+          "column": 0
+        },
+        "end": {
+          "line": 264,
+          "column": 1
+        }
+      },
+      "privacy": "public",
+      "superclass": "HTMLElement",
+      "name": "PieHome",
+      "attributes": [
+        {
+          "name": "game-level",
+          "description": "",
+          "sourceRange": {
+            "start": {
+              "line": 217,
+              "column": 12
+            },
+            "end": {
+              "line": 220,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "type": "number | null | undefined"
+        }
+      ],
+      "events": [],
+      "styling": {
+        "cssVariables": [],
+        "selectors": []
+      },
+      "slots": [],
+      "tagname": "pie-home"
+    },
+    {
+      "description": "",
+      "summary": "",
       "path": "src/play-button.js",
       "properties": [
         {
@@ -611,11 +751,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 44,
+              "line": 45,
               "column": 12
             },
             "end": {
-              "line": 47,
+              "line": 48,
               "column": 13
             }
           },
@@ -633,11 +773,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 48,
+              "line": 49,
               "column": 12
             },
             "end": {
-              "line": 51,
+              "line": 52,
               "column": 13
             }
           },
@@ -655,11 +795,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 52,
+              "line": 53,
               "column": 12
             },
             "end": {
-              "line": 55,
+              "line": 56,
               "column": 13
             }
           },
@@ -677,11 +817,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 56,
+              "line": 57,
               "column": 12
             },
             "end": {
-              "line": 58,
+              "line": 59,
               "column": 13
             }
           },
@@ -698,11 +838,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 59,
+              "line": 60,
               "column": 12
             },
             "end": {
-              "line": 63,
+              "line": 64,
               "column": 13
             }
           },
@@ -2803,11 +2943,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 69,
+              "line": 70,
               "column": 4
             },
             "end": {
-              "line": 72,
+              "line": 73,
               "column": 5
             }
           },
@@ -2936,11 +3076,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 73,
+              "line": 74,
               "column": 4
             },
             "end": {
-              "line": 81,
+              "line": 82,
               "column": 5
             }
           },
@@ -2963,11 +3103,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 82,
+              "line": 83,
               "column": 4
             },
             "end": {
-              "line": 103,
+              "line": 104,
               "column": 5
             }
           },
@@ -2987,11 +3127,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 104,
+              "line": 105,
               "column": 4
             },
             "end": {
-              "line": 107,
+              "line": 108,
               "column": 5
             }
           },
@@ -3007,11 +3147,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 108,
+              "line": 109,
               "column": 4
             },
             "end": {
-              "line": 112,
+              "line": 113,
               "column": 5
             }
           },
@@ -3037,11 +3177,11 @@
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 113,
+              "line": 114,
               "column": 4
             },
             "end": {
-              "line": 118,
+              "line": 119,
               "column": 5
             }
           },
@@ -3995,7 +4135,7 @@
           "column": 0
         },
         "end": {
-          "line": 119,
+          "line": 120,
           "column": 1
         }
       },
@@ -4008,11 +4148,11 @@
           "description": "",
           "sourceRange": {
             "start": {
-              "line": 44,
+              "line": 45,
               "column": 12
             },
             "end": {
-              "line": 47,
+              "line": 48,
               "column": 13
             }
           },
@@ -4024,11 +4164,11 @@
           "description": "",
           "sourceRange": {
             "start": {
-              "line": 48,
+              "line": 49,
               "column": 12
             },
             "end": {
-              "line": 51,
+              "line": 52,
               "column": 13
             }
           },
@@ -4040,11 +4180,11 @@
           "description": "",
           "sourceRange": {
             "start": {
-              "line": 52,
+              "line": 53,
               "column": 12
             },
             "end": {
-              "line": 55,
+              "line": 56,
               "column": 13
             }
           },
@@ -4056,11 +4196,11 @@
           "description": "",
           "sourceRange": {
             "start": {
-              "line": 56,
+              "line": 57,
               "column": 12
             },
             "end": {
-              "line": 58,
+              "line": 59,
               "column": 13
             }
           },
@@ -4072,11 +4212,11 @@
           "description": "",
           "sourceRange": {
             "start": {
-              "line": 59,
+              "line": 60,
               "column": 12
             },
             "end": {
-              "line": 63,
+              "line": 64,
               "column": 13
             }
           },
@@ -4095,20 +4235,20 @@
     {
       "description": "",
       "summary": "",
-      "path": "src/pie-app.js",
+      "path": "src/pie-game.js",
       "properties": [
         {
           "name": "botSequence",
           "type": "Array | null | undefined",
-          "description": "",
+          "description": "The melody the bot will play.",
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 276,
+              "line": 466,
               "column": 12
             },
             "end": {
-              "line": 279,
+              "line": 469,
               "column": 13
             }
           },
@@ -4120,39 +4260,17 @@
           "defaultValue": "[]"
         },
         {
-          "name": "userSequence",
-          "type": "Array | null | undefined",
-          "description": "",
-          "privacy": "public",
-          "sourceRange": {
-            "start": {
-              "line": 280,
-              "column": 12
-            },
-            "end": {
-              "line": 283,
-              "column": 13
-            }
-          },
-          "metadata": {
-            "polymer": {
-              "attributeType": "Array"
-            }
-          },
-          "defaultValue": "[]"
-        },
-        {
-          "name": "progressIndex",
+          "name": "userProgress",
           "type": "number | null | undefined",
-          "description": "",
+          "description": "The index of the last rightly-guessed note.",
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 284,
+              "line": 473,
               "column": 12
             },
             "end": {
-              "line": 287,
+              "line": 476,
               "column": 13
             }
           },
@@ -4166,15 +4284,15 @@
         {
           "name": "playbackIndex",
           "type": "number | null | undefined",
-          "description": "",
+          "description": "The index of the last note played by the bot.",
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 288,
+              "line": 480,
               "column": 12
             },
             "end": {
-              "line": 291,
+              "line": 483,
               "column": 13
             }
           },
@@ -4186,17 +4304,17 @@
           "defaultValue": "-1"
         },
         {
-          "name": "reset",
+          "name": "wrongNoteFeedback",
           "type": "boolean | null | undefined",
-          "description": "",
+          "description": "If the visual feedback of a wrong guess ought to show.",
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 292,
+              "line": 487,
               "column": 12
             },
             "end": {
-              "line": 296,
+              "line": 491,
               "column": 13
             }
           },
@@ -4210,15 +4328,15 @@
         {
           "name": "score",
           "type": "number | null | undefined",
-          "description": "",
+          "description": "The game mode score.",
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 297,
+              "line": 495,
               "column": 12
             },
             "end": {
-              "line": 300,
+              "line": 498,
               "column": 13
             }
           },
@@ -4230,25 +4348,309 @@
           "defaultValue": "0"
         },
         {
-          "name": "hasWon",
-          "type": "boolean | null | undefined",
-          "description": "",
+          "name": "warmupLevel",
+          "type": "number | null | undefined",
+          "description": "The wamup mode user level.",
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 301,
+              "line": 502,
               "column": 12
             },
             "end": {
-              "line": 301,
-              "column": 27
+              "line": 505,
+              "column": 13
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "attributeType": "Number"
+            }
+          },
+          "defaultValue": "0"
+        },
+        {
+          "name": "warmupDisplayLevel",
+          "type": "number | null | undefined",
+          "description": "Which warmup level to display to the user.",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 509,
+              "column": 12
+            },
+            "end": {
+              "line": 512,
+              "column": 13
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "readOnly": true,
+              "attributeType": "Number"
+            }
+          }
+        },
+        {
+          "name": "gameLevel",
+          "type": "number | null | undefined",
+          "description": "The game mode user level.\nThis will determine how many notes (3, 4 or 5) are used in the scale.",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 517,
+              "column": 12
+            },
+            "end": {
+              "line": 520,
+              "column": 13
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "attributeType": "Number"
+            }
+          },
+          "defaultValue": "5"
+        },
+        {
+          "name": "revealIndex",
+          "type": "?",
+          "description": "This controls what notes are shown.",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 524,
+              "column": 12
+            },
+            "end": {
+              "line": 526,
+              "column": 13
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "readOnly": true
+            }
+          }
+        },
+        {
+          "name": "lifeCount",
+          "type": "number | null | undefined",
+          "description": "The game mode user lives.",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 530,
+              "column": 12
+            },
+            "end": {
+              "line": 533,
+              "column": 13
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "attributeType": "Number"
+            }
+          },
+          "defaultValue": "4"
+        },
+        {
+          "name": "gameMode",
+          "type": "boolean | null | undefined",
+          "description": "If we are in game mode.",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 537,
+              "column": 12
+            },
+            "end": {
+              "line": 540,
+              "column": 13
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "readOnly": true,
+              "attributeType": "Boolean"
+            }
+          }
+        },
+        {
+          "name": "warmupMode",
+          "type": "boolean | null | undefined",
+          "description": "If we are in warmup mode.",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 544,
+              "column": 12
+            },
+            "end": {
+              "line": 547,
+              "column": 13
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "readOnly": true,
+              "attributeType": "Boolean"
+            }
+          }
+        },
+        {
+          "name": "sampleList",
+          "type": "Array | null | undefined",
+          "description": "The list of the sound files.",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 551,
+              "column": 12
+            },
+            "end": {
+              "line": 560,
+              "column": 13
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "attributeType": "Array"
+            }
+          },
+          "defaultValue": "[\"assets/sounds/piano-1.mp3\",\"assets/sounds/piano-2.mp3\",\"assets/sounds/piano-3.mp3\",\"assets/sounds/piano-4.mp3\",\"assets/sounds/piano-5.mp3\"]"
+        },
+        {
+          "name": "evaluationSuspended",
+          "type": "boolean | null | undefined",
+          "description": "If the user should be able to play freely\nwithout evaluating the notes.",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 565,
+              "column": 12
+            },
+            "end": {
+              "line": 568,
+              "column": 13
             }
           },
           "metadata": {
             "polymer": {
               "attributeType": "Boolean"
             }
-          }
+          },
+          "defaultValue": "false"
+        },
+        {
+          "name": "blockAction",
+          "type": "?",
+          "description": "If some actions should be temporarily disabled in the game flow.\n(e.g. when the playback button is animating or when it's game over).",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 573,
+              "column": 12
+            },
+            "end": {
+              "line": 576,
+              "column": 13
+            }
+          },
+          "metadata": {
+            "polymer": {}
+          },
+          "defaultValue": "false"
+        },
+        {
+          "name": "warmup",
+          "type": "Object | null | undefined",
+          "description": "The instance of the Warmup class to coordinate the warmup.",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 580,
+              "column": 12
+            },
+            "end": {
+              "line": 583,
+              "column": 13
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "attributeType": "Object"
+            }
+          },
+          "defaultValue": "{}"
+        },
+        {
+          "name": "tutorial",
+          "type": "Object | null | undefined",
+          "description": "The instance of the Tutorial class to coordinate the tutorial.",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 587,
+              "column": 12
+            },
+            "end": {
+              "line": 590,
+              "column": 13
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "attributeType": "Object"
+            }
+          },
+          "defaultValue": "{}"
+        },
+        {
+          "name": "timeout",
+          "type": "number | null | undefined",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 591,
+              "column": 12
+            },
+            "end": {
+              "line": 594,
+              "column": 13
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "attributeType": "Number"
+            }
+          },
+          "defaultValue": "null"
+        },
+        {
+          "name": "feedbackTimeout",
+          "type": "number | null | undefined",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 595,
+              "column": 12
+            },
+            "end": {
+              "line": 598,
+              "column": 13
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "attributeType": "Number"
+            }
+          },
+          "defaultValue": "null"
         }
       ],
       "methods": [
@@ -4258,11 +4660,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 312,
+              "line": 602,
               "column": 4
             },
             "end": {
-              "line": 317,
+              "line": 615,
               "column": 5
             }
           },
@@ -4273,16 +4675,16 @@
           }
         },
         {
-          "name": "hit",
-          "description": "",
+          "name": "playNote",
+          "description": "On-down action for the displayed notes",
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 318,
+              "line": 620,
               "column": 4
             },
             "end": {
-              "line": 350,
+              "line": 671,
               "column": 5
             }
           },
@@ -4297,16 +4699,40 @@
           }
         },
         {
-          "name": "checkGame",
+          "name": "evaluatePlayedNote",
+          "description": "Evaluate if the user note is correct",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 676,
+              "column": 4
+            },
+            "end": {
+              "line": 741,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "noteIndex"
+            }
+          ],
+          "return": {
+            "type": "void"
+          }
+        },
+        {
+          "name": "progressAfterCorrectGuess",
           "description": "",
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 351,
+              "line": 743,
               "column": 4
             },
             "end": {
-              "line": 369,
+              "line": 787,
               "column": 5
             }
           },
@@ -4317,16 +4743,40 @@
           }
         },
         {
-          "name": "startPlaybackWithDelay",
-          "description": "",
-          "privacy": "public",
+          "name": "_computeRevealIndex",
+          "description": "Compute revealIndex.",
+          "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 370,
+              "line": 792,
               "column": 4
             },
             "end": {
-              "line": 373,
+              "line": 808,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "gameLevel"
+            },
+            {
+              "name": "warmupLevel"
+            }
+          ]
+        },
+        {
+          "name": "_startPlaybackWithDelay",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 810,
+              "column": 4
+            },
+            "end": {
+              "line": 814,
               "column": 5
             }
           },
@@ -4342,11 +4792,59 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 374,
+              "line": 816,
               "column": 4
             },
             "end": {
-              "line": 392,
+              "line": 852,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "e"
+            }
+          ],
+          "return": {
+            "type": "void"
+          }
+        },
+        {
+          "name": "exitGame",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 854,
+              "column": 4
+            },
+            "end": {
+              "line": 873,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "e"
+            }
+          ],
+          "return": {
+            "type": "void"
+          }
+        },
+        {
+          "name": "resetRestartTimeout",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 875,
+              "column": 4
+            },
+            "end": {
+              "line": 880,
               "column": 5
             }
           },
@@ -4357,16 +4855,16 @@
           }
         },
         {
-          "name": "init",
+          "name": "_generateSequence",
           "description": "",
-          "privacy": "public",
+          "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 393,
+              "line": 882,
               "column": 4
             },
             "end": {
-              "line": 415,
+              "line": 888,
               "column": 5
             }
           },
@@ -4377,36 +4875,16 @@
           }
         },
         {
-          "name": "generateSequence",
+          "name": "_doGenerateSequence",
           "description": "",
-          "privacy": "public",
+          "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 416,
+              "line": 890,
               "column": 4
             },
             "end": {
-              "line": 422,
-              "column": 5
-            }
-          },
-          "metadata": {},
-          "params": [],
-          "return": {
-            "type": "void"
-          }
-        },
-        {
-          "name": "doGenerateSequence",
-          "description": "",
-          "privacy": "public",
-          "sourceRange": {
-            "start": {
-              "line": 423,
-              "column": 4
-            },
-            "end": {
-              "line": 454,
+              "line": 939,
               "column": 5
             }
           },
@@ -4414,16 +4892,33 @@
           "params": []
         },
         {
-          "name": "arraysDiffer",
+          "name": "_getPitchArray",
           "description": "",
-          "privacy": "public",
+          "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 455,
+              "line": 941,
               "column": 4
             },
             "end": {
-              "line": 457,
+              "line": 956,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": []
+        },
+        {
+          "name": "_arraysDiffer",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 958,
+              "column": 4
+            },
+            "end": {
+              "line": 960,
               "column": 5
             }
           },
@@ -4438,16 +4933,16 @@
           ]
         },
         {
-          "name": "playBotSequence",
+          "name": "_playBotSequence",
           "description": "",
-          "privacy": "public",
+          "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 458,
+              "line": 962,
               "column": 4
             },
             "end": {
-              "line": 472,
+              "line": 976,
               "column": 5
             }
           },
@@ -4458,16 +4953,185 @@
           }
         },
         {
+          "name": "_startGameFromDialog",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 978,
+              "column": 4
+            },
+            "end": {
+              "line": 984,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [],
+          "return": {
+            "type": "void"
+          }
+        },
+        {
+          "name": "_restartGameFromDialog",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 986,
+              "column": 4
+            },
+            "end": {
+              "line": 990,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [],
+          "return": {
+            "type": "void"
+          }
+        },
+        {
+          "name": "_clearGame",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 992,
+              "column": 4
+            },
+            "end": {
+              "line": 1000,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [],
+          "return": {
+            "type": "void"
+          }
+        },
+        {
+          "name": "startFlow",
+          "description": "Public method",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 1003,
+              "column": 4
+            },
+            "end": {
+              "line": 1012,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "gameLevel"
+            },
+            {
+              "name": "warmupLevel"
+            }
+          ],
+          "return": {
+            "type": "void"
+          }
+        },
+        {
+          "name": "stopPlayback",
+          "description": "Public method",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 1015,
+              "column": 4
+            },
+            "end": {
+              "line": 1030,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [],
+          "return": {
+            "type": "void"
+          }
+        },
+        {
+          "name": "_computeLifeOverlayHeight",
+          "description": "UI helper to compute the height of the overlay covering the heart symbol",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 1035,
+              "column": 4
+            },
+            "end": {
+              "line": 1049,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": []
+        },
+        {
+          "name": "_computeWarmupIconOpacity",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 1051,
+              "column": 4
+            },
+            "end": {
+              "line": 1059,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "warmupDisplayLevel"
+            },
+            {
+              "name": "markupInstance"
+            }
+          ]
+        },
+        {
+          "name": "_computeWarmupDisplayLevel",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 1061,
+              "column": 4
+            },
+            "end": {
+              "line": 1066,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "warmupLevel"
+            }
+          ]
+        },
+        {
           "name": "_computeProgressClass",
           "description": "",
           "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 473,
+              "line": 1068,
               "column": 4
             },
             "end": {
-              "line": 487,
+              "line": 1082,
               "column": 5
             }
           },
@@ -4480,7 +5144,7 @@
               "name": "itemIndex"
             },
             {
-              "name": "progressIndex"
+              "name": "userProgress"
             },
             {
               "name": "playbackIndex"
@@ -4488,16 +5152,16 @@
           ]
         },
         {
-          "name": "resetPlaybackButtonStrokeOffset",
+          "name": "_resetPlaybackButtonStrokeOffset",
           "description": "",
-          "privacy": "public",
+          "privacy": "protected",
           "sourceRange": {
             "start": {
-              "line": 488,
+              "line": 1084,
               "column": 4
             },
             "end": {
-              "line": 491,
+              "line": 1087,
               "column": 5
             }
           },
@@ -4508,21 +5172,568 @@
           }
         },
         {
-          "name": "onPlayButtonAnimationEnd",
+          "name": "_isSmaller",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 1089,
+              "column": 4
+            },
+            "end": {
+              "line": 1091,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "compared"
+            },
+            {
+              "name": "base"
+            }
+          ]
+        },
+        {
+          "name": "_computeGameMode",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 1093,
+              "column": 4
+            },
+            "end": {
+              "line": 1095,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "gameLevel"
+            }
+          ]
+        },
+        {
+          "name": "_computeWarmupMode",
+          "description": "",
+          "privacy": "protected",
+          "sourceRange": {
+            "start": {
+              "line": 1097,
+              "column": 4
+            },
+            "end": {
+              "line": 1099,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "warmupLevel"
+            }
+          ]
+        }
+      ],
+      "staticMethods": [],
+      "demos": [],
+      "metadata": {},
+      "sourceRange": {
+        "start": {
+          "line": 9,
+          "column": 0
+        },
+        "end": {
+          "line": 1100,
+          "column": 1
+        }
+      },
+      "privacy": "public",
+      "superclass": "HTMLElement",
+      "name": "PieGame",
+      "attributes": [
+        {
+          "name": "bot-sequence",
+          "description": "The melody the bot will play.",
+          "sourceRange": {
+            "start": {
+              "line": 466,
+              "column": 12
+            },
+            "end": {
+              "line": 469,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "type": "Array | null | undefined"
+        },
+        {
+          "name": "user-progress",
+          "description": "The index of the last rightly-guessed note.",
+          "sourceRange": {
+            "start": {
+              "line": 473,
+              "column": 12
+            },
+            "end": {
+              "line": 476,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "type": "number | null | undefined"
+        },
+        {
+          "name": "playback-index",
+          "description": "The index of the last note played by the bot.",
+          "sourceRange": {
+            "start": {
+              "line": 480,
+              "column": 12
+            },
+            "end": {
+              "line": 483,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "type": "number | null | undefined"
+        },
+        {
+          "name": "wrong-note-feedback",
+          "description": "If the visual feedback of a wrong guess ought to show.",
+          "sourceRange": {
+            "start": {
+              "line": 487,
+              "column": 12
+            },
+            "end": {
+              "line": 491,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "type": "boolean | null | undefined"
+        },
+        {
+          "name": "score",
+          "description": "The game mode score.",
+          "sourceRange": {
+            "start": {
+              "line": 495,
+              "column": 12
+            },
+            "end": {
+              "line": 498,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "type": "number | null | undefined"
+        },
+        {
+          "name": "warmup-level",
+          "description": "The wamup mode user level.",
+          "sourceRange": {
+            "start": {
+              "line": 502,
+              "column": 12
+            },
+            "end": {
+              "line": 505,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "type": "number | null | undefined"
+        },
+        {
+          "name": "warmup-display-level",
+          "description": "Which warmup level to display to the user.",
+          "sourceRange": {
+            "start": {
+              "line": 509,
+              "column": 12
+            },
+            "end": {
+              "line": 512,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "type": "number | null | undefined"
+        },
+        {
+          "name": "game-level",
+          "description": "The game mode user level.\nThis will determine how many notes (3, 4 or 5) are used in the scale.",
+          "sourceRange": {
+            "start": {
+              "line": 517,
+              "column": 12
+            },
+            "end": {
+              "line": 520,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "type": "number | null | undefined"
+        },
+        {
+          "name": "reveal-index",
+          "description": "This controls what notes are shown.",
+          "sourceRange": {
+            "start": {
+              "line": 524,
+              "column": 12
+            },
+            "end": {
+              "line": 526,
+              "column": 13
+            }
+          },
+          "metadata": {}
+        },
+        {
+          "name": "life-count",
+          "description": "The game mode user lives.",
+          "sourceRange": {
+            "start": {
+              "line": 530,
+              "column": 12
+            },
+            "end": {
+              "line": 533,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "type": "number | null | undefined"
+        },
+        {
+          "name": "game-mode",
+          "description": "If we are in game mode.",
+          "sourceRange": {
+            "start": {
+              "line": 537,
+              "column": 12
+            },
+            "end": {
+              "line": 540,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "type": "boolean | null | undefined"
+        },
+        {
+          "name": "warmup-mode",
+          "description": "If we are in warmup mode.",
+          "sourceRange": {
+            "start": {
+              "line": 544,
+              "column": 12
+            },
+            "end": {
+              "line": 547,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "type": "boolean | null | undefined"
+        },
+        {
+          "name": "sample-list",
+          "description": "The list of the sound files.",
+          "sourceRange": {
+            "start": {
+              "line": 551,
+              "column": 12
+            },
+            "end": {
+              "line": 560,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "type": "Array | null | undefined"
+        },
+        {
+          "name": "evaluation-suspended",
+          "description": "If the user should be able to play freely\nwithout evaluating the notes.",
+          "sourceRange": {
+            "start": {
+              "line": 565,
+              "column": 12
+            },
+            "end": {
+              "line": 568,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "type": "boolean | null | undefined"
+        },
+        {
+          "name": "block-action",
+          "description": "If some actions should be temporarily disabled in the game flow.\n(e.g. when the playback button is animating or when it's game over).",
+          "sourceRange": {
+            "start": {
+              "line": 573,
+              "column": 12
+            },
+            "end": {
+              "line": 576,
+              "column": 13
+            }
+          },
+          "metadata": {}
+        },
+        {
+          "name": "warmup",
+          "description": "The instance of the Warmup class to coordinate the warmup.",
+          "sourceRange": {
+            "start": {
+              "line": 580,
+              "column": 12
+            },
+            "end": {
+              "line": 583,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "type": "Object | null | undefined"
+        },
+        {
+          "name": "tutorial",
+          "description": "The instance of the Tutorial class to coordinate the tutorial.",
+          "sourceRange": {
+            "start": {
+              "line": 587,
+              "column": 12
+            },
+            "end": {
+              "line": 590,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "type": "Object | null | undefined"
+        },
+        {
+          "name": "timeout",
+          "description": "",
+          "sourceRange": {
+            "start": {
+              "line": 591,
+              "column": 12
+            },
+            "end": {
+              "line": 594,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "type": "number | null | undefined"
+        },
+        {
+          "name": "feedback-timeout",
+          "description": "",
+          "sourceRange": {
+            "start": {
+              "line": 595,
+              "column": 12
+            },
+            "end": {
+              "line": 598,
+              "column": 13
+            }
+          },
+          "metadata": {},
+          "type": "number | null | undefined"
+        }
+      ],
+      "events": [],
+      "styling": {
+        "cssVariables": [],
+        "selectors": []
+      },
+      "slots": [],
+      "tagname": "pie-game"
+    },
+    {
+      "description": "",
+      "summary": "",
+      "path": "src/pie-app.js",
+      "properties": [
+        {
+          "name": "section",
+          "type": "string | null | undefined",
           "description": "",
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 492,
+              "line": 62,
+              "column": 12
+            },
+            "end": {
+              "line": 65,
+              "column": 13
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "attributeType": "String"
+            }
+          },
+          "defaultValue": "\"game\""
+        },
+        {
+          "name": "isAttached",
+          "type": "boolean | null | undefined",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 66,
+              "column": 12
+            },
+            "end": {
+              "line": 69,
+              "column": 13
+            }
+          },
+          "metadata": {
+            "polymer": {
+              "notify": true,
+              "attributeType": "Boolean"
+            }
+          }
+        }
+      ],
+      "methods": [
+        {
+          "name": "connectedCallback",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 73,
               "column": 4
             },
             "end": {
-              "line": 495,
+              "line": 76,
               "column": 5
             }
           },
           "metadata": {},
           "params": [],
+          "return": {
+            "type": "void"
+          }
+        },
+        {
+          "name": "getGameComponent",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 78,
+              "column": 4
+            },
+            "end": {
+              "line": 80,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": []
+        },
+        {
+          "name": "navigateToHome",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 82,
+              "column": 4
+            },
+            "end": {
+              "line": 84,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [],
+          "return": {
+            "type": "void"
+          }
+        },
+        {
+          "name": "navigateToGame",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 86,
+              "column": 4
+            },
+            "end": {
+              "line": 88,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [],
+          "return": {
+            "type": "void"
+          }
+        },
+        {
+          "name": "startGame",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 90,
+              "column": 4
+            },
+            "end": {
+              "line": 93,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [],
+          "return": {
+            "type": "void"
+          }
+        },
+        {
+          "name": "proceedToStartGame",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 95,
+              "column": 4
+            },
+            "end": {
+              "line": 100,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "e"
+            }
+          ],
           "return": {
             "type": "void"
           }
@@ -4533,11 +5744,11 @@
       "metadata": {},
       "sourceRange": {
         "start": {
-          "line": 6,
+          "line": 9,
           "column": 0
         },
         "end": {
-          "line": 496,
+          "line": 101,
           "column": 1
         }
       },
@@ -4546,119 +5757,46 @@
       "name": "PieApp",
       "attributes": [
         {
-          "name": "bot-sequence",
+          "name": "section",
           "description": "",
           "sourceRange": {
             "start": {
-              "line": 276,
+              "line": 62,
               "column": 12
             },
             "end": {
-              "line": 279,
+              "line": 65,
               "column": 13
             }
           },
           "metadata": {},
-          "type": "Array | null | undefined"
+          "type": "string | null | undefined"
         },
         {
-          "name": "user-sequence",
+          "name": "is-attached",
           "description": "",
           "sourceRange": {
             "start": {
-              "line": 280,
+              "line": 66,
               "column": 12
             },
             "end": {
-              "line": 283,
+              "line": 69,
               "column": 13
-            }
-          },
-          "metadata": {},
-          "type": "Array | null | undefined"
-        },
-        {
-          "name": "progress-index",
-          "description": "",
-          "sourceRange": {
-            "start": {
-              "line": 284,
-              "column": 12
-            },
-            "end": {
-              "line": 287,
-              "column": 13
-            }
-          },
-          "metadata": {},
-          "type": "number | null | undefined"
-        },
-        {
-          "name": "playback-index",
-          "description": "",
-          "sourceRange": {
-            "start": {
-              "line": 288,
-              "column": 12
-            },
-            "end": {
-              "line": 291,
-              "column": 13
-            }
-          },
-          "metadata": {},
-          "type": "number | null | undefined"
-        },
-        {
-          "name": "reset",
-          "description": "",
-          "sourceRange": {
-            "start": {
-              "line": 292,
-              "column": 12
-            },
-            "end": {
-              "line": 296,
-              "column": 13
-            }
-          },
-          "metadata": {},
-          "type": "boolean | null | undefined"
-        },
-        {
-          "name": "score",
-          "description": "",
-          "sourceRange": {
-            "start": {
-              "line": 297,
-              "column": 12
-            },
-            "end": {
-              "line": 300,
-              "column": 13
-            }
-          },
-          "metadata": {},
-          "type": "number | null | undefined"
-        },
-        {
-          "name": "has-won",
-          "description": "",
-          "sourceRange": {
-            "start": {
-              "line": 301,
-              "column": 12
-            },
-            "end": {
-              "line": 301,
-              "column": 27
             }
           },
           "metadata": {},
           "type": "boolean | null | undefined"
         }
       ],
-      "events": [],
+      "events": [
+        {
+          "type": "CustomEvent",
+          "name": "is-attached-changed",
+          "description": "Fired when the `isAttached` property changes.",
+          "metadata": {}
+        }
+      ],
       "styling": {
         "cssVariables": [],
         "selectors": []
@@ -4671,6 +5809,208 @@
     {
       "description": "",
       "summary": "",
+      "path": "src/tutorial.js",
+      "properties": [
+        {
+          "name": "active",
+          "type": "?",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 12,
+              "column": 4
+            },
+            "end": {
+              "line": 14,
+              "column": 5
+            }
+          },
+          "metadata": {}
+        },
+        {
+          "name": "stepList",
+          "type": "?",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 16,
+              "column": 4
+            },
+            "end": {
+              "line": 19,
+              "column": 5
+            }
+          },
+          "metadata": {}
+        }
+      ],
+      "methods": [
+        {
+          "name": "setStep",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 21,
+              "column": 4
+            },
+            "end": {
+              "line": 51,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "step"
+            }
+          ],
+          "return": {
+            "type": "void"
+          }
+        },
+        {
+          "name": "openTooltip",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 53,
+              "column": 4
+            },
+            "end": {
+              "line": 58,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "target"
+            },
+            {
+              "name": "text"
+            }
+          ],
+          "return": {
+            "type": "void"
+          }
+        },
+        {
+          "name": "isElementTarget",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 64,
+              "column": 4
+            },
+            "end": {
+              "line": 66,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "e"
+            }
+          ]
+        },
+        {
+          "name": "setUserStep",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 68,
+              "column": 4
+            },
+            "end": {
+              "line": 70,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "target"
+            }
+          ],
+          "return": {
+            "type": "void"
+          }
+        },
+        {
+          "name": "setAppStep",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 72,
+              "column": 4
+            },
+            "end": {
+              "line": 74,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "appEvent"
+            }
+          ],
+          "return": {
+            "type": "void"
+          }
+        },
+        {
+          "name": "proceedToNextStep",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 76,
+              "column": 4
+            },
+            "end": {
+              "line": 80,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "e"
+            }
+          ],
+          "return": {
+            "type": "void"
+          }
+        }
+      ],
+      "staticMethods": [],
+      "demos": [],
+      "metadata": {},
+      "sourceRange": {
+        "start": {
+          "line": 0,
+          "column": 0
+        },
+        "end": {
+          "line": 81,
+          "column": 1
+        }
+      },
+      "privacy": "public",
+      "name": "Tutorial"
+    },
+    {
+      "description": "",
+      "summary": "",
       "path": "src/pie-player-mixin.js",
       "properties": [],
       "methods": [
@@ -4680,11 +6020,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 65,
+              "line": 43,
               "column": 8
             },
             "end": {
-              "line": 67,
+              "line": 45,
               "column": 9
             }
           },
@@ -4700,11 +6040,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 68,
+              "line": 46,
               "column": 8
             },
             "end": {
-              "line": 78,
+              "line": 53,
               "column": 9
             }
           },
@@ -4715,16 +6055,56 @@
           }
         },
         {
-          "name": "playSound",
+          "name": "preparePlayback",
           "description": "",
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 79,
+              "line": 54,
               "column": 8
             },
             "end": {
-              "line": 94,
+              "line": 69,
+              "column": 9
+            }
+          },
+          "metadata": {},
+          "params": [],
+          "return": {
+            "type": "void"
+          }
+        },
+        {
+          "name": "runPlayback",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 70,
+              "column": 8
+            },
+            "end": {
+              "line": 95,
+              "column": 9
+            }
+          },
+          "metadata": {},
+          "params": [],
+          "return": {
+            "type": "void"
+          }
+        },
+        {
+          "name": "computeSecondsForNoteLength",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 96,
+              "column": 8
+            },
+            "end": {
+              "line": 102,
               "column": 9
             }
           },
@@ -4732,12 +6112,56 @@
           "params": [
             {
               "name": "note"
-            },
-            {
-              "name": "time",
-              "defaultValue": "0"
             }
           ]
+        },
+        {
+          "name": "playBotSound",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 103,
+              "column": 8
+            },
+            "end": {
+              "line": 109,
+              "column": 9
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "noteIndex"
+            }
+          ],
+          "return": {
+            "type": "void"
+          }
+        },
+        {
+          "name": "playUserSound",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 110,
+              "column": 8
+            },
+            "end": {
+              "line": 113,
+              "column": 9
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "noteIndex"
+            }
+          ],
+          "return": {
+            "type": "void"
+          }
         },
         {
           "name": "onPlaybackChanged",
@@ -4745,11 +6169,11 @@
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 95,
+              "line": 114,
               "column": 8
             },
             "end": {
-              "line": 115,
+              "line": 138,
               "column": 9
             }
           },
@@ -4767,56 +6191,43 @@
           }
         },
         {
-          "name": "nextNote",
+          "name": "disconnectSourceAndGain",
           "description": "",
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 116,
+              "line": 139,
               "column": 8
             },
             "end": {
-              "line": 118,
+              "line": 142,
               "column": 9
             }
           },
           "metadata": {},
-          "params": [],
-          "return": {
-            "type": "void"
-          }
-        },
-        {
-          "name": "scheduler",
-          "description": "",
-          "privacy": "public",
-          "sourceRange": {
-            "start": {
-              "line": 119,
-              "column": 8
+          "params": [
+            {
+              "name": "source"
             },
-            "end": {
-              "line": 137,
-              "column": 9
+            {
+              "name": "gainNode"
             }
-          },
-          "metadata": {},
-          "params": [],
+          ],
           "return": {
             "type": "void"
           }
         },
         {
           "name": "draw",
-          "description": "",
+          "description": "Loop when playback is active.\nWhen there is a scheduled note, increment the playback index,\nwhich will make the note bar appear on the screen.",
           "privacy": "public",
           "sourceRange": {
             "start": {
-              "line": 138,
+              "line": 148,
               "column": 8
             },
             "end": {
-              "line": 149,
+              "line": 161,
               "column": 9
             }
           },
@@ -4836,12 +6247,140 @@
           "column": 11
         },
         "end": {
-          "line": 150,
+          "line": 162,
           "column": 5
         }
       },
       "privacy": "public",
       "superclass": "superClass"
+    },
+    {
+      "description": "",
+      "summary": "",
+      "path": "src/warmup.js",
+      "properties": [
+        {
+          "name": "active",
+          "type": "?",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 29,
+              "column": 4
+            },
+            "end": {
+              "line": 31,
+              "column": 5
+            }
+          },
+          "metadata": {}
+        }
+      ],
+      "methods": [
+        {
+          "name": "hasFixedNotes",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 35,
+              "column": 4
+            },
+            "end": {
+              "line": 37,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "level"
+            }
+          ]
+        },
+        {
+          "name": "insertFixedNotes",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 38,
+              "column": 4
+            },
+            "end": {
+              "line": 66,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "level"
+            },
+            {
+              "name": "sequence"
+            }
+          ]
+        },
+        {
+          "name": "getPitchArray",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 67,
+              "column": 4
+            },
+            "end": {
+              "line": 79,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "level"
+            }
+          ]
+        },
+        {
+          "name": "getNumberOfNotes",
+          "description": "",
+          "privacy": "public",
+          "sourceRange": {
+            "start": {
+              "line": 80,
+              "column": 4
+            },
+            "end": {
+              "line": 88,
+              "column": 5
+            }
+          },
+          "metadata": {},
+          "params": [
+            {
+              "name": "level"
+            }
+          ]
+        }
+      ],
+      "staticMethods": [],
+      "demos": [],
+      "metadata": {},
+      "sourceRange": {
+        "start": {
+          "line": 21,
+          "column": 15
+        },
+        "end": {
+          "line": 89,
+          "column": 1
+        }
+      },
+      "privacy": "public",
+      "name": "Warmup"
     }
   ]
 }

@@ -63,17 +63,8 @@ class PieApp extends GestureEventListeners(PolymerElement) {
             section: {
                 type: String,
                 value: 'game'
-            },
-            isAttached: {
-                type: Boolean,
-                notify: true
             }
         }
-    }
-
-    connectedCallback() {
-        super.connectedCallback();
-        this.isAttached = true;
     }
 
     getGameComponent() {

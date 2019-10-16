@@ -2,22 +2,37 @@
 window.polymerSkipLoadingFontRoboto = true;
 
 let gameComponent;
+let media;
 
 document.addEventListener('deviceready', () => {
     // Cordova fires a 'pause' event when app goes to the background
-    document.addEventListener('pause', onPause, false);    
+    document.addEventListener('pause', onPause, false);
+    document.addEventListener('resume', onResume, false);
+    media = new Media('assets/sounds/background.mp3', null, null, status => {
+        if (status === 4) {
+            media.play();
+        }
+    });
+    media.setVolume(0);
+    media.play();
 }, false);
 
 // Pause audio when quitting the app
 function onPause() {
     gameComponent.stopPlayback();
+    media.pause();
+}
+
+// Resume audio when quitting the app
+function onResume() {
+    media.play();
 }
 
 function BlockMove(event) { 
     event.preventDefault(); 
   }
 
-// When the game component is ready, run the callback
+// When the game component is ready, set up the tutorial
 document.addEventListener('pie-game-connected', () => {
     gameComponent = document.getElementById('app').getGameComponent();
 

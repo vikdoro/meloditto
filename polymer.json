@@ -7,7 +7,6 @@
     ],
     "extraDependencies": [
         "node_modules/@webcomponents/webcomponentsjs/**",
-        "loadBuffer.js",
         "init.js",
         "src/tutorial.js"
     ],

@@ -547,19 +547,6 @@ class PieGame extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
                 computed: '_computeWarmupMode(warmupLevel)'
             },
             /**
-            * The list of the sound files.
-            */
-            sampleList: {
-                type: Array,
-                value: [
-                    'assets/sounds/piano-1.mp3',
-                    'assets/sounds/piano-2.mp3',
-                    'assets/sounds/piano-3.mp3',
-                    'assets/sounds/piano-4.mp3',
-                    'assets/sounds/piano-5.mp3',
-                ]
-            },
-            /**
             * If the user should be able to play freely
             * without evaluating the notes.
             */
@@ -588,10 +575,6 @@ class PieGame extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
             tutorial: {
                 type: Object,
                 value: () => ({})
-            },
-            timeout: {
-                type: Number,
-                value: null
             },
             feedbackTimeout: {
                 type: Number,
@@ -627,7 +610,7 @@ class PieGame extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
             return;
         }
         const element = e.currentTarget;
-        const note = parseInt(element.getAttribute('data-note'));
+        const noteIndex = parseInt(element.getAttribute('data-note'));
 
         // Dispatch an event that for the tutorial module.
         e.currentTarget.dispatchEvent(new Event('tutorial-tap'));
@@ -648,7 +631,7 @@ class PieGame extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
             element.classList.remove('hit');
         }, 250);
 
-        this.playSound(note, true);
+        this.playUserSound(noteIndex);
 
         // User has heard at least two notes, so if they are playing sounds, display the full melody
         // to allow evaluation
@@ -657,13 +640,13 @@ class PieGame extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
         }
 
         // Evalutate the played note if a bot melody is present,
-        // flow not suspended, not in tutorial and 
+        // flow not suspended, not in tutorial and
         // melody has played through (playback index is not -1)
         if (this.botSequence.length > 0
                 && !this.tutorial.active
                 && !this.evaluationSuspended
                 && this.playbackIndex !== -1) {
-            this.evaluatePlayedNote(note);
+            this.evaluatePlayedNote(noteIndex);
 
             // Reset this flag as user guesses are evaluated now
             this.userStoppedPlaybackAfterHearingMultipleNotes = false;
@@ -674,11 +657,11 @@ class PieGame extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
     /**
      * Evaluate if the user note is correct
      */
-    evaluatePlayedNote(note) {
+    evaluatePlayedNote(noteIndex) {
         const currentNoteIndex = this.userProgress + 1;
 
         // Right guess
-        if (this.botSequence[currentNoteIndex].noteIndex === note) {
+        if (this.botSequence[currentNoteIndex].noteIndex === noteIndex) {
             this.userProgress = this.userProgress + 1;
             if (this.userProgress === this.botSequence.length - 1) {
                 this.progressAfterCorrectGuess();
@@ -902,6 +885,7 @@ class PieGame extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
             // 2, 3 or 4
             numberOfNotes = Math.floor(Math.random() * 3) + 2;
         }
+        numberOfNotes = 4;
         const fixedWarmupNotes = this.warmup.hasFixedNotes(this.warmupLevel);
         let sequence = [];
         do {
@@ -920,6 +904,7 @@ class PieGame extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
                     }
                     indexesToTransform.push(index);
                 });
+                this.set('indexesToTransform', [0, 1, 3]);
                 for (let j = 0; j < indexesToTransform.length; j++) {
                     // The stored index plus the iteration index to adjust for the previous inserted notes
                     let indexToTransform = indexesToTransform[j] + j;
@@ -965,7 +950,7 @@ class PieGame extends PiePlayerMixin(GestureEventListeners(PolymerElement)) {
             let currentNote = this.botSequence[k];
             tempArray.push({
                 note: currentNote.noteIndex,
-                time: currentTime
+                length: currentNote.length
             });
             // Add note length to the currentTime
             currentTime += currentNote.length * 0.25;
